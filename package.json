@@ -1,0 +1,30 @@
+{
+  "name": "tdu21-discordbot",
+  "version": "1.0.0",
+  "description": "A Discord bot for tdu21-discord-campus",
+  "repository": "https://github.com/kazuemon/tdu21-discordbot",
+  "author": "kazuemon <kazuemon@kazuemon.me>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "dev": "nodemon index.ts"
+  },
+  "dependencies": {
+    "@typeit/discord": "^4.0.8",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.20",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
+  }
+}
