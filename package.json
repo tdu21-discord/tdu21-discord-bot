@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "start": "ts-node index.ts",
     "dev": "nodemon index.ts"
   },
   "dependencies": {
