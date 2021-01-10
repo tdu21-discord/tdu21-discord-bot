@@ -43,33 +43,34 @@ export abstract class DepartmentRole {
     // Bot ではないかどうか
     if (user.bot) return;
 
-    // 自分自身に付けられたリアクションかどうか
-    if (reaction.message.author.id !== "796596910215397386") return;
-
-    // チャンネルが #学科設定 かどうか
-    if (reaction.message.channel.id !== "796380475324629003") return;
+    // メッセージ固定
+    if (reaction.message.id !== "797459494061473822") return;
 
     // リアクションに対応する役職があるかどうか
     if (!roleIdByReactionId[reaction.emoji.id]) return;
 
-    // 既に学科ロールがついている => その学科ロールは外す
+    // 既に学科ロールがついている => キャンセル
     const member = reaction.message.guild.member(user);
     const userRoles: Role[] = await member.roles.cache.array();
     const roleIds = Object.values(roleIdByReactionId);
+    var alreadyFlag: boolean = false;
     for (let role of userRoles) {
       if (roleIds.includes(role.id)) {
-        let beRemovedRole = await reaction.message.guild.roles.fetch(role.id);
-        member.roles.remove(beRemovedRole);
+        reaction.users.remove(user);
+        alreadyFlag = true;
+        /*let beRemovedRole = await reaction.message.guild.roles.fetch(role.id);
+        member.roles.remove(beRemovedRole);*/
       }
     }
+    if (alreadyFlag) return;
 
     // リアクションに対応する役職を付与する
     const beAddedRole = await reaction.message.guild.roles.fetch(
       roleIdByReactionId[reaction.emoji.id]
     );
+    member.roles.add(
+      await reaction.message.guild.roles.fetch("797458909300129792")
+    );
     member.roles.add(beAddedRole);
-
-    // リアクションの除去
-    reaction.users.remove(user);
   }
 }
