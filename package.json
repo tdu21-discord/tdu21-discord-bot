@@ -14,6 +14,7 @@
     "@typeit/discord": "^4.0.8",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "emoji-unicode": "^2.0.1",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
