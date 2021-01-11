@@ -55,6 +55,15 @@ export abstract class ExtendMessageCommand {
 
           break;
         }
+        case "embed": {
+          const messageResponse = await channel.send(post.body);
+          if (post.reactions) {
+            for (let reactionId of post.reactions) {
+              await messageResponse.react(reactionId);
+            }
+          }
+          break;
+        }
       }
     }
 
