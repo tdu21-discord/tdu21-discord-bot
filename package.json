@@ -2,8 +2,8 @@
   "name": "tdu21-discord-bot",
   "version": "1.0.0",
   "description": "A Discord bot for tdu21-discord-campus",
-  "repository": "https://github.com/kazuemon/tdu21-discordbot",
-  "author": "kazuemon <kazuemon@kazuemon.me>",
+  "repository": "https://github.com/tdu21-discord/tdu21-discordbot",
+  "author": "tdu21-discord",
   "license": "MIT",
   "private": false,
   "scripts": {
