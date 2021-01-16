@@ -19,7 +19,5 @@ jobs:
         env:
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
-          cd "/home/runner/work/tdu21-discord-bot"
-          ls -a
-          chmod +x "/.github/script/restart.sh"
-          "/.github/restart.sh ${PASSWORD}"
+          chmod +x "./.github/script/restart.sh"
+          "./.github/restart.sh ${PASSWORD}"
