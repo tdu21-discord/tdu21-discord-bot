@@ -24,5 +24,4 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script/restart.sh"
-          "${GITHUB_WORKSPACE}/.github/script/restart.sh ${PASSWORD}"
-          
+          ${GITHUB_WORKSPACE}/.github/script/restart.sh ${PASSWORD}
