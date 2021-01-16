@@ -12,7 +12,7 @@ async function start() {
 
   await client.login(process.env.DISCORD_BOT_TOKEN);
 
-  process.on('SIGINT', () => {
+  process.on('SIGTERM', () => {
     console.log("session destroy...");
     client.destroy();
   });
