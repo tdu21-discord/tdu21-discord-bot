@@ -1,6 +1,6 @@
 import { Command, CommandMessage } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
-import * as messageData from "../messages.json";
+import * as messageData from "../config/extendMessages.json";
 
 export abstract class ExtendMessageCommand {
   @Command("extend :targetChannel :messageKey")

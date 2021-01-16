@@ -1,0 +1,30 @@
+name: Update Bot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY_MOUNTAIN_SERVER }}
+          name: id_mountain
+          known_hosts: ${{ secrets.KNOWN_HOSTS_MOUNTAIN_SERVER }}
+          config: ${{ secrets.CONFIG_MOUNTAIN_SERVER }}
+      - name: Run update script
+        shell: bash -xe {0}
+        env:
+          PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
+        run: |
+          chmod +x "${GITHUB_WORKSPACE}/.github/script/update.sh"
+          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD}

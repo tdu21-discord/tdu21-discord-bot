@@ -2,8 +2,8 @@
   "name": "tdu21-discord-bot",
   "version": "1.0.0",
   "description": "A Discord bot for tdu21-discord-campus",
-  "repository": "https://github.com/kazuemon/tdu21-discordbot",
-  "author": "kazuemon <kazuemon@kazuemon.me>",
+  "repository": "https://github.com/tdu21-discord/tdu21-discordbot",
+  "author": "tdu21-discord",
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -14,6 +14,7 @@
     "@typeit/discord": "^4.0.8",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "emoji-unicode": "^2.0.1",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
