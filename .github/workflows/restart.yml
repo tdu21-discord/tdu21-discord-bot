@@ -19,7 +19,7 @@ jobs:
         env:
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
-          cd "${GITHUB_WORKSPACE}/.github/script/"
+          cd ".github/script/"
           ls -a
-          chmod +x "${GITHUB_WORKSPACE}/.github/script/restart.sh"
-          "${GITHUB_WORKSPACE}/.github/restart.sh ${PASSWORD}"
+          chmod +x ".github/script/restart.sh"
+          ".github/restart.sh ${PASSWORD}"
