@@ -52,7 +52,7 @@ const departments: Department[] = [
   },
   {
     slug: "ES",
-    name: "工学部 応用科学科",
+    name: "工学部 応用化学科",
     roleId: "796550287510863902",
     emojiId: "796584431472607232",
     channelId: "796379408897802303",
