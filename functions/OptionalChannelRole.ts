@@ -27,12 +27,6 @@ export abstract class OptionalChannelRole {
     const targetChannel = optRoles[reaction.message.channel.id];
     if (targetChannel === undefined) return;
 
-    // 対象のメッセージIDを検索
-    const targets = targetChannel.targetMessages.filter(
-      (message) => message.messageId
-    );
-    if (targets.length === 0) return;
-
     // 絵文字をUnicodeに変換
     let emojiId;
     if (reaction.emoji instanceof ReactionEmoji) {
@@ -44,7 +38,7 @@ export abstract class OptionalChannelRole {
     }
 
     // 対象の絵文字を検索し、ロールを付与する
-    for (let target of targets) {
+    for (let target of targetChannel.targetRoles) {
       if (target.emojiId === emojiId) {
         member.roles.add(
           await reaction.message.guild.roles.fetch(target.roleId)
@@ -76,12 +70,6 @@ export abstract class OptionalChannelRole {
     const targetChannel = optRoles[reaction.message.channel.id];
     if (targetChannel === undefined) return;
 
-    // 対象のメッセージIDを検索
-    const targets = targetChannel.targetMessages.filter(
-      (message) => message.messageId
-    );
-    if (targets.length === 0) return;
-
     // 絵文字をUnicodeに変換
     let emojiId;
     if (reaction.emoji instanceof ReactionEmoji) {
@@ -93,7 +81,7 @@ export abstract class OptionalChannelRole {
     }
 
     // 対象の絵文字を検索し、ロールを除去する
-    for (let target of targets) {
+    for (let target of targetChannel.targetRoles) {
       if (target.emojiId === emojiId) {
         member.roles.remove(
           await reaction.message.guild.roles.fetch(target.roleId)
