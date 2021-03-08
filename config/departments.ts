@@ -1,4 +1,4 @@
-import { Department } from "./@types/department";
+import { Department } from "../@types/department";
 
 const departments: Department[] = [
   {

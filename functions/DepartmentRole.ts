@@ -7,7 +7,7 @@ import {
   User,
 } from "discord.js";
 import { Department } from "../@types/department";
-import departments from "../departments";
+import departments from "../config/departments";
 
 export abstract class DepartmentRole {
   @On("messageReactionAdd")
