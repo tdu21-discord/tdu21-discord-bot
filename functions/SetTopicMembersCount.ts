@@ -1,6 +1,6 @@
 import { ArgsOf, On } from "@typeit/discord";
 import { Client, Role } from "discord.js";
-import departments from "../departments";
+import departments from "../config/departments";
 
 export abstract class OptionalChannelRole {
   @On("guildMemberUpdate")

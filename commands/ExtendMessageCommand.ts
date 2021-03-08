@@ -1,6 +1,7 @@
 import { Command, CommandMessage } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
 import * as messageData from "../config/extendMessages.json";
+import posts from "../config/posts";
 
 export abstract class ExtendMessageCommand {
   @Command("extend :targetChannel :messageKey")
@@ -30,7 +31,9 @@ export abstract class ExtendMessageCommand {
       return;
     }
 
-    const messageDatum = messageData[message.args.messageKey];
+    const messageDatum = posts.find(
+      (post) => post.name === message.args.messageKey
+    );
 
     if (!messageDatum) {
       message.channel.send(
@@ -42,27 +45,11 @@ export abstract class ExtendMessageCommand {
       return;
     }
 
-    for (let post of messageDatum.posts) {
-      switch (post.type) {
-        case "text": {
-          const messageResponse = await channel.send(post.body);
-
-          if (post.reactions) {
-            for (let reactionId of post.reactions) {
-              await messageResponse.react(reactionId);
-            }
-          }
-
-          break;
-        }
-        case "embed": {
-          const messageResponse = await channel.send(post.body);
-          if (post.reactions) {
-            for (let reactionId of post.reactions) {
-              await messageResponse.react(reactionId);
-            }
-          }
-          break;
+    for (let post of messageDatum.contents) {
+      const messageResponse = await channel.send(post.body);
+      if (post.reactions) {
+        for (let reactionId of post.reactions) {
+          await messageResponse.react(reactionId);
         }
       }
     }
