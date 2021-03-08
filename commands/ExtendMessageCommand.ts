@@ -1,6 +1,5 @@
 import { Command, CommandMessage } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
-import * as messageData from "../config/extendMessages.json";
 import posts from "../config/posts";
 
 export abstract class ExtendMessageCommand {
