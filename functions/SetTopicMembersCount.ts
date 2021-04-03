@@ -16,7 +16,9 @@ export abstract class OptionalChannelRole {
       const hasBefore = afterMember.roles.cache.has(role.id);
       const hasAfter = beforeMember.roles.cache.has(role.id);
       if ((hasBefore || hasAfter) && !(hasBefore && hasAfter)) {
-        const deps = departments.filter((dep) => dep.roleId === role.id);
+        const deps = departments.filter(
+          (dep) => dep.departmentRoleId === role.id
+        );
         if (deps[0]) {
           const dep = deps[0];
           const channel = beforeMember.guild.channels.cache.get(dep.channelId);

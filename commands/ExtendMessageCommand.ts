@@ -5,6 +5,14 @@ import posts from "../config/posts";
 export abstract class ExtendMessageCommand {
   @Command("extend :targetChannel :messageKey")
   async onExtendMessageCommand(message: CommandMessage) {
+    if (
+      message.guild.members.cache
+        .find((user) => user.id === message.author.id)
+        .roles.cache.find((role) => role.id === "796375044334419969") ===
+      undefined
+    )
+      return;
+
     message.react("👀");
 
     if (!message.args.targetChannel || !message.args.messageKey) {

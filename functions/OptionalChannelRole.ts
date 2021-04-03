@@ -1,5 +1,5 @@
 import { ArgsOf, On, Client } from "@typeit/discord";
-import * as optRoles from "../config/optionalChannels.json";
+import optionalChannels from "../config/optionalChannels";
 import * as emojiUnicode from "emoji-unicode";
 import { ReactionEmoji } from "discord.js";
 
@@ -24,11 +24,13 @@ export abstract class OptionalChannelRole {
     if (user.bot) return;
 
     // 対象のチャンネルを検索
-    const targetChannel = optRoles[reaction.message.channel.id];
-    if (targetChannel === undefined) return;
+    const channelConfig = optionalChannels.find(
+      (ch) => ch.channelId === reaction.message.channel.id
+    );
+    if (channelConfig === undefined) return;
 
     // 絵文字をUnicodeに変換
-    let emojiId;
+    let emojiId: string;
     if (reaction.emoji instanceof ReactionEmoji) {
       // 固有絵文字の場合は U+[ID](UpperCase)
       emojiId = emojiUnicode(reaction.emoji.name).toUpperCase();
@@ -38,7 +40,7 @@ export abstract class OptionalChannelRole {
     }
 
     // 対象の絵文字を検索し、ロールを付与する
-    for (let target of targetChannel.targetRoles) {
+    for (let target of channelConfig.targetRoles) {
       if (target.emojiId === emojiId) {
         member.roles.add(
           await reaction.message.guild.roles.fetch(target.roleId)
@@ -67,11 +69,13 @@ export abstract class OptionalChannelRole {
     if (user.bot) return;
 
     // 対象のチャンネルを検索
-    const targetChannel = optRoles[reaction.message.channel.id];
-    if (targetChannel === undefined) return;
+    const channelConfig = optionalChannels.find(
+      (ch) => ch.channelId === reaction.message.channel.id
+    );
+    if (channelConfig === undefined) return;
 
     // 絵文字をUnicodeに変換
-    let emojiId;
+    let emojiId: string;
     if (reaction.emoji instanceof ReactionEmoji) {
       // 固有絵文字の場合は U+[ID](UpperCase)
       emojiId = emojiUnicode(reaction.emoji.name).toUpperCase();
@@ -81,7 +85,7 @@ export abstract class OptionalChannelRole {
     }
 
     // 対象の絵文字を検索し、ロールを除去する
-    for (let target of targetChannel.targetRoles) {
+    for (let target of channelConfig.targetRoles) {
       if (target.emojiId === emojiId) {
         member.roles.remove(
           await reaction.message.guild.roles.fetch(target.roleId)

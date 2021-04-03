@@ -50,7 +50,7 @@ export abstract class DepartmentRole {
     // リアクションに対応する役職を付与する
     member.roles.add([
       await reaction.message.guild.roles.fetch("797458909300129792"),
-      await reaction.message.guild.roles.fetch(beAddedDep.roleId),
+      await reaction.message.guild.roles.fetch(beAddedDep.departmentRoleId),
     ]);
 
     // 自己紹介チャンネルにメンション
