@@ -1,7 +1,8 @@
 export interface Department {
   slug: string;
   name: string;
-  roleId: string;
+  departmentRoleId: string;
+  facultyRoleId: string;
   emojiId: string;
   channelId: string;
 }
