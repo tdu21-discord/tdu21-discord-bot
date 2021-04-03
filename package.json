@@ -11,18 +11,18 @@
     "dev": "nodemon index.ts"
   },
   "dependencies": {
-    "@typeit/discord": "^4.0.8",
-    "discord.js": "^12.5.1",
+    "@typeit/discord": "^4.0.9",
+    "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "emoji-unicode": "^2.0.1",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
-    "@types/node": "^14.14.20",
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
-    "@typescript-eslint/parser": "^4.12.0",
-    "eslint": "^7.17.0",
-    "eslint-config-prettier": "^7.1.0",
+    "@types/node": "^14.14.37",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
