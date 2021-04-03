@@ -15,6 +15,8 @@ git reset --hard origin/"$BRANCH"
 
 yarn install
 
+echo "DISCORD_BOT_TOKEN=$2" >> .env
+
 echo "$1" | sudo -S systemctl start tdu21-discord-bot
 
 SHELL
