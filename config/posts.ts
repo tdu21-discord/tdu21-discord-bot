@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-import { Post, PostSection } from "../@types/post";
+import { Post } from "../@types/post";
 
 const posts: Post[] = [
   {

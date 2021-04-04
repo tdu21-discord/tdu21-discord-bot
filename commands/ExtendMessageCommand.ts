@@ -1,4 +1,4 @@
-import { Command, CommandMessage, Discord } from "@typeit/discord";
+import { Command, CommandMessage } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
 import posts from "../config/posts";
 

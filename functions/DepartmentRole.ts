@@ -1,12 +1,8 @@
 import { On, ArgsOf, Client } from "@typeit/discord";
 import {
-  GuildMember,
-  ReactionUserManager,
   Role,
   TextChannel,
-  User,
 } from "discord.js";
-import { Department } from "../@types/department";
 import departments from "../config/departments";
 
 export abstract class DepartmentRole {
