@@ -1,0 +1,76 @@
+import { ArgsOf, Guard, On } from "@typeit/discord";
+import { Client, Message, MessageEmbed, User } from "discord.js";
+import messages from "../../config/auth/directMessage";
+import DirectMessageOnly from "../../guards/DirectMessageOnlyGuard";
+
+export abstract class DendaiStudentAuth {
+    // サーバー参加
+    @On("guildMemberAdd")
+    async onGuildMemberAdd(
+        [member]: ArgsOf<"guildMemberAdd">,
+        client: Client
+    ) {
+        // メンバーのIDがDB上に存在しないかチェックし、存在すれば削除する
+
+        // メンバーのIDを元にレコードを作成 (ユーザーID, ステータス)
+
+        // メールアドレス認証に関するDMを送信
+    }
+
+    // 学籍番号の入力
+    @On("message")
+    @Guard(DirectMessageOnly)
+    async receiveStudentId(
+        [directMessage]: ArgsOf<"message">,
+        client: Client
+    ) {
+        // メンバーIDがDB上に存在し、ステータスが `NEW_JOIN` の場合のみ以下を処理する
+
+        // 学籍番号を正規表現で検証し、マッチしなければエラーを吐く
+
+        // 学籍番号をハッシュ化して、メンバーテーブルに同じ値がないか検証する
+
+        // メンバーテーブルに同じ値があればエラーを吐く、同じ値がなければハッシュ化した学籍番号をレコードに格納する
+
+        // 学籍番号を 21 + 〇〇 + XXX で分け、学科記号と学籍番号下1桁が奇数であるか偶数であるかをレコードに格納する
+
+        // 6桁のランダムな認証番号を生成し、レコードに格納する
+
+        // 学校メールアドレスに認証番号を送信
+    }
+
+    // 認証番号の検証
+    @On("message")
+    @Guard(DirectMessageOnly)
+    async verifyCode(
+        code: number
+    ) {
+        // TODO
+    }
+
+    // サーバー脱退
+    @On("guildMemberRemove")
+    async onGuildMemberRemove(
+        [member]: ArgsOf<"guildMemberRemove">,
+        client: Client
+    ) {
+        // TODO
+    }
+
+    // ダイレクトメッセージを送信する
+    async sendDirectMessage(
+        user: User,
+        messageName: string
+    ) {
+        const messageDatum = messages.find(
+            (message) => message.name === messageName
+        );
+
+        for (let message of messageDatum.contents) {
+            const getSendObject = (body: string | MessageEmbed) =>
+                body instanceof MessageEmbed ? { embed: body } : body;
+
+            await user.send(getSendObject(message.body));
+        }
+    }
+}
