@@ -1,17 +1,19 @@
-import { Command, CommandMessage } from "@typeit/discord";
+import { Command, CommandMessage, Discord } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
 import posts from "../config/posts";
 
 export abstract class ExtendMessageCommand {
   @Command("extend :targetChannel :messageKey")
   async onExtendMessageCommand(message: CommandMessage) {
-    if (
-      message.guild.members.cache
-        .find((user) => user.id === message.author.id)
-        .roles.cache.find((role) => role.id === "796375044334419969") ===
-      undefined
-    )
+
+    if (message.member.roles.cache.find((role) => role.id === process.env.MODERATOR_ROLE_ID) === undefined) {
+      message.channel.send({embed:
+        new MessageEmbed()
+          .setColor("#F24D24")
+          .setTitle("このコマンドを実行する権限がありません。")}
+      );
       return;
+    }
 
     message.react("👀");
 
