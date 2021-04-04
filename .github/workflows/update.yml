@@ -26,7 +26,9 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           MODERATOR_ROLE_ID: ${{ secrets.MODERATOR_ROLE_ID }}
+          LOGDNA_TOKEN: ${{ secrets.LOGDNA_TOKEN }}
+          LOGDNA_APP: ${{ secrets.LOGDNA_APP }}
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script/update.sh"
-          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD} ${DISCORD_BOT_TOKEN} ${MODERATOR_ROLE_ID}
+          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD} ${DISCORD_BOT_TOKEN} ${MODERATOR_ROLE_ID} ${LOGDNA_TOKEN} ${LOGDNA_APP}

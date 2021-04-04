@@ -19,6 +19,8 @@ rm -rf .env
 
 echo "DISCORD_BOT_TOKEN=$2" >> .env
 echo "MODERATOR_ROLE_ID=$3" >> .env
+echo "LOGDNA_TOKEN=$4" >> .env
+echo "LOGDNA_APP=$5" >> .env
 
 echo "$1" | sudo -S systemctl start tdu21-discord-bot
 

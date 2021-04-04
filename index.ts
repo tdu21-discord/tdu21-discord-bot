@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config();
+
 import { Client } from "@typeit/discord";
+import { logger } from "./utils/logger";
 
 async function start() {
   const client = new Client({
@@ -12,8 +14,10 @@ async function start() {
 
   await client.login(process.env.DISCORD_BOT_TOKEN);
 
+  logger.info("Welcome to TDU21-Discord Bot...");
+
   process.on("SIGTERM", () => {
-    console.log("session destroy...");
+    logger.info("Bye, shutdown TDU21-Discord Bot...");
     client.destroy();
   });
 }

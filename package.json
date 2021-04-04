@@ -11,6 +11,7 @@
     "dev": "nodemon index.ts"
   },
   "dependencies": {
+    "@logdna/logger": "^2.3.1",
     "@typeit/discord": "^4.0.9",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
