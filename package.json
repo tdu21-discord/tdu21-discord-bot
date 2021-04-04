@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@logdna/logger": "^2.3.1",
+    "@sendgrid/mail": "^7.4.2",
     "@typeit/discord": "^4.0.9",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
