@@ -16,8 +16,8 @@ async function start() {
 
   logger.info("Welcome to TDU21-Discord Bot...");
 
-  process.on("SIGTERM", () => {
-    logger.info("Bye, shutdown TDU21-Discord Bot...");
+  process.on("SIGINT", () => {
+    logger.info("Shutdown TDU21-Discord Bot...");
     client.destroy();
   });
 }
