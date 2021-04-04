@@ -24,7 +24,8 @@ jobs:
       - name: Run update script
         shell: bash -xe {0}
         env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script/update.sh"
-          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD}
+          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD} ${DISCORD_BOT_TOKEN}
