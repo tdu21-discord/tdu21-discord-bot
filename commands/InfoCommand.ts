@@ -14,20 +14,20 @@ export abstract class InfoCommand {
     const guildMember: GuildMember = guildMembers.first();
 
     if (!guildMember) {
-      message.channel.send(
+      message.channel.send({embed:
         new MessageEmbed()
           .setColor("#F24D24")
-          .setTitle("ユーザーが見つかりませんでした")
+          .setTitle("ユーザーが見つかりませんでした")}
       );
 
       return;
     }
 
-    message.channel.send(
+    message.channel.send({embed:
       new MessageEmbed()
         .setColor("#249FF2")
         .setTitle(`${guildMember.displayName} さんのプロフィール`)
-        .setImage(guildMember.user.avatarURL())
+        .setImage(guildMember.user.avatarURL())}
     );
   }
 }
