@@ -16,10 +16,10 @@ export abstract class ExtendMessageCommand {
     message.react("👀");
 
     if (!message.args.targetChannel || !message.args.messageKey) {
-      message.channel.send(
+      message.channel.send({embed:
         new MessageEmbed()
           .setColor("#F24D24")
-          .setTitle("引数おかしいよ？？？？？？")
+          .setTitle("引数おかしいよ？？？？？？")}
       );
 
       return;
@@ -29,10 +29,10 @@ export abstract class ExtendMessageCommand {
     const channel = message.guild.channels.cache.get(channelId) as TextChannel;
 
     if (!channel) {
-      message.channel.send(
+      message.channel.send({embed:
         new MessageEmbed()
           .setColor("#F24D24")
-          .setTitle("チャンネルねえよ？？？？？？")
+          .setTitle("チャンネルねえよ？？？？？？")}
       );
 
       return;
@@ -43,17 +43,20 @@ export abstract class ExtendMessageCommand {
     );
 
     if (!messageDatum) {
-      message.channel.send(
+      message.channel.send({embed:
         new MessageEmbed()
           .setColor("#F24D24")
-          .setTitle("メッセージがねえよ？？？？？？")
+          .setTitle("メッセージがねえよ？？？？？？")}
       );
 
       return;
     }
 
     for (let post of messageDatum.contents) {
-      const messageResponse = await channel.send(post.body);
+      const getSendObject = (body: string | MessageEmbed) =>
+        body instanceof MessageEmbed ? { embed: body }
+        : body;
+      const messageResponse = await channel.send(getSendObject(post.body));
       if (post.reactions) {
         for (let reactionId of post.reactions) {
           await messageResponse.react(reactionId);
