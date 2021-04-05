@@ -8,7 +8,11 @@
   "private": false,
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "ts-node": "ts-node",
+    "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate",
+    "migration:run": "ts-node node_modules/.bin/typeorm migration:run",
+    "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert"
   },
   "dependencies": {
     "@logdna/logger": "^2.3.1",

@@ -1,13 +1,13 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export enum Status {
+enum Status {
     NEW_JOIN = "NEW_JOIN",
     SENT_EMAIL = "SENT_EMAIL",
     COMPLETE = "COMPLETE"
 }
 
 @Entity()
-export class Member {
+export class Student {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -22,7 +22,7 @@ export class Member {
         type: "varchar",
         unique: true
     })
-    member_id: string;
+    student_id: string;
 
     @Column()
     department: string;
