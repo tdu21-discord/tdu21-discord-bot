@@ -24,10 +24,14 @@ export class Student {
     })
     student_id: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     department: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     odd_even: number;
 
     @Column({
