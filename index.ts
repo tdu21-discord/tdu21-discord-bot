@@ -5,8 +5,7 @@ import "reflect-metadata";
 
 import { Client } from "@typeit/discord";
 import { logger } from "./utils/logger";
-import { connectDatabase } from "./utils/database";
-import { getConnection } from "typeorm";
+import { createConnection, getConnection } from "typeorm";
 
 async function start() {
   const client = new Client({
@@ -21,7 +20,7 @@ async function start() {
 
   try {
     console.info("Try connectoin database...");
-    await connectDatabase();
+    await createConnection();
   } catch (error) {
     console.error("Database connectoin error...");
     process.exit();
