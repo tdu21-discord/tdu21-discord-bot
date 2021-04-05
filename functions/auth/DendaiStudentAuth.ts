@@ -37,15 +37,32 @@ export abstract class DendaiStudentAuth {
         // 6桁のランダムな認証番号を生成し、レコードに格納する
 
         // 学校メールアドレスに認証番号を送信
+
+        // ステータスを `SENT_EMAIL` に変更する
     }
 
     // 認証番号の検証
     @On("message")
     @Guard(DirectMessageOnly)
     async verifyCode(
-        code: number
+        [directMessage]: ArgsOf<"message">,
+        client: Client
     ) {
-        // TODO
+        // メンバーIDがDB上に存在し、ステータスが `SENT_EMAIL` の場合のみ以下を処理する
+
+        // 認証番号の検証における試行回数が閾値を超えていたら、モデレーターに連絡するようにDMを送信する
+
+        // 送られてきたメッセージがすべて数字かつ6桁であるかを正規表現で検証する
+
+        // メンバーIDから認証番号を取得し検証を行う
+
+        // 認証に成功したら、DB に保存されている学科記号と奇数 or 偶数の情報を用いてロールを付与する
+
+        // 認証に失敗したら、試行回数をインクリメントしてエラーを吐く
+
+        // ステータスを `COMPLETE` に変更する
+
+        // 認証成功に関するDMを送信
     }
 
     // サーバー脱退
@@ -54,7 +71,7 @@ export abstract class DendaiStudentAuth {
         [member]: ArgsOf<"guildMemberRemove">,
         client: Client
     ) {
-        // TODO
+        // メンバーに関する情報を抹消
     }
 
     // ダイレクトメッセージを送信する
