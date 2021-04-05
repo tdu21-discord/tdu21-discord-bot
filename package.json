@@ -17,7 +17,10 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "emoji-unicode": "^2.0.1",
-    "nodemon": "^2.0.7"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.32"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",

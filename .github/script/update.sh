@@ -17,13 +17,17 @@ yarn install
 
 rm -rf .env
 
-echo "DISCORD_BOT_TOKEN=$2" >> .env
-echo "MODERATOR_ROLE_ID=$3" >> .env
-echo "LOGDNA_TOKEN=$4" >> .env
-echo "LOGDNA_APP=$5" >> .env
-echo "SENDGRID_API_KEY=$6" >> .env
-echo "SENDGRID_FROM_EMAIL=$7" >> .env
-echo "DENDAI_EMAIL_DOMAIN=$8" >> .env
+echo "DISCORD_BOT_TOKEN="$2 >> .env
+echo "MODERATOR_ROLE_ID="$3 >> .env
+echo "LOGDNA_TOKEN="$4 >> .env
+echo "LOGDNA_APP="$5 >> .env
+echo "SENDGRID_API_KEY="$6 >> .env
+echo "SENDGRID_FROM_EMAIL="$7 >> .env
+echo "DENDAI_EMAIL_DOMAIN="$8 >> .env
+echo "DB_HOST="$9 >> .env
+echo "DB_USERNAME="${10} >> .env
+echo "DB_PASSWORD="${11} >> .env
+echo "DB_DATABASE="${12} >> .env
 
 echo "$1" | sudo -S systemctl start tdu21-discord-bot
 
