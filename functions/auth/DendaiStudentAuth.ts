@@ -1,6 +1,7 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
-import { Client, Message, MessageEmbed, User } from "discord.js";
+import { Client, MessageEmbed, User } from "discord.js";
 import messages from "../../config/auth/directMessage";
+import Guest from "../../guards/auth/Guest";
 import DirectMessageOnly from "../../guards/DirectMessageOnlyGuard";
 
 export abstract class DendaiStudentAuth {
@@ -10,7 +11,11 @@ export abstract class DendaiStudentAuth {
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
-        // メンバーのIDがDB上に存在しないかチェックし、存在すれば削除する
+        // メンバーのIDがDB上に存在しないかチェックし、存在すればステータスを確認する
+
+        // ステータスが `NEW_JOIN` であれば、レコード作成をスキップする
+        // ステータスが `SENT_EMAIL` であれば、確認コードを再発行認証用メールを再送信してレコードの作成と認証に関するDMの送信をスキップ
+        // ステータスが `COMPLETE` であれば、自動認証しメンバーにロールを付与する
 
         // メンバーのIDを元にレコードを作成 (ユーザーID, ステータス)
 
@@ -19,7 +24,10 @@ export abstract class DendaiStudentAuth {
 
     // 学籍番号の入力
     @On("message")
-    @Guard(DirectMessageOnly)
+    @Guard(
+        DirectMessageOnly,
+        Guest
+    )
     async receiveStudentId(
         [directMessage]: ArgsOf<"message">,
         client: Client
@@ -43,7 +51,10 @@ export abstract class DendaiStudentAuth {
 
     // 認証番号の検証
     @On("message")
-    @Guard(DirectMessageOnly)
+    @Guard(
+        DirectMessageOnly,
+        Guest
+    )
     async verifyCode(
         [directMessage]: ArgsOf<"message">,
         client: Client

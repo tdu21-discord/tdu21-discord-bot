@@ -1,13 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-enum Status {
+export enum Status {
     NEW_JOIN = "NEW_JOIN",
     SENT_EMAIL = "SENT_EMAIL",
     COMPLETE = "COMPLETE"
 }
 
 @Entity()
-export class Student {
+export class Student extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
