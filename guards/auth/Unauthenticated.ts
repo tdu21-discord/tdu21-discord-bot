@@ -1,8 +1,8 @@
 import { ArgsOf, GuardFunction, Next } from "@typeit/discord";
-import { Client, Guild, GuildMember, Message } from "discord.js";
-import { Student } from "../../database/entity/Student";
+import { Client, GuildMember, Message } from "discord.js";
+import { Student, Status } from "../../database/entity/Student";
 
-const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (
+const Unauthenticated: GuardFunction<"message" | "guildMemberAdd"> = async (
     [payload]: ArgsOf<"message" | "guildMemberAdd">,
     client: Client,
     next: Next
@@ -19,9 +19,9 @@ const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (
         user_id: userId()
     });
 
-    if (student !== undefined) return;
+    if (student === undefined || student.status === Status.COMPLETE) return;
 
     await next();
 }
 
-export default Guest;
+export default Unauthenticated;
