@@ -35,6 +35,19 @@ export class Student extends BaseEntity {
     odd_even: number;
 
     @Column({
+        type: "varchar",
+        nullable: true,
+        length: 4,
+        unique: true
+    })
+    passcode: string;
+
+    @Column({
+        default: 0
+    })
+    threshold: number;
+
+    @Column({
         type: "enum",
         enum: Status,
         default: Status.NEW_JOIN
