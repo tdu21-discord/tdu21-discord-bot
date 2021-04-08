@@ -6,25 +6,28 @@ import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
 import Unauthenticated from "../../guards/auth/Unauthenticated";
 import DirectMessageOnly from "../../guards/DirectMessageOnlyGuard";
+import { logger } from "../../utils/logger";
 import { sendVerifyMail } from "../../utils/sendgrid";
 
 export abstract class DendaiStudentAuth {
-    // サーバー参加 (ゲスト)
     @On("guildMemberAdd")
     @Guard(Guest)
-    async newJoinStudent(
+    async joinNewStudent(
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
-        // メンバーのIDがDB上に存在しないかチェックし、存在すればステータスを確認する
+        try {
+            const student = new Student();
 
-        // ステータスが `NEW_JOIN` であれば、レコード作成をスキップする
-        // ステータスが `SENT_EMAIL` であれば、確認コードを再発行認証用メールを再送信してレコードの作成と認証に関するDMの送信をスキップ
-        // ステータスが `COMPLETE` であれば、自動認証しメンバーにロールを付与する
+            student.user_id = member.user.id;
+            student.save();
+        } catch (error) {
+            logger.error(error);
+        }
 
-        // メンバーのIDを元にレコードを作成 (ユーザーID, ステータス)
+        this.sendDirectMessage(member.user, "join");
 
-        // メールアドレス認証に関するDMを送信
+        logger.info("[NEW_JOIN] " + member.user.id + " ");
     }
 
     // サーバー参加 (未認証)
@@ -34,7 +37,8 @@ export abstract class DendaiStudentAuth {
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
-
+        // ステータスが `NEW_JOIN` であれば、レコード作成をスキップする
+        // ステータスが `SENT_EMAIL` であれば、確認コードを再発行認証用メールを再送信してレコードの作成と認証に関するDMの送信をスキップ
     }
 
     // サーバー参加 (認証済み)
@@ -44,7 +48,7 @@ export abstract class DendaiStudentAuth {
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
-
+        // ステータスが `COMPLETE` であれば、自動認証しメンバーにロールを付与する
     }
 
     // 学籍番号の入力
