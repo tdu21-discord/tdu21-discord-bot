@@ -3,14 +3,14 @@ import { Client, Guild, GuildMember, Message } from "discord.js";
 import { Student } from "../../database/entity/Student";
 
 const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (
-    [payload]: ArgsOf<"message" | "guildMemberAdd">,
+    [payload]: any,
     client: Client,
     next: Next
 ) => {
     const isBot = () => {
-        if (payload instanceof Message) {
+        if (payload.constructor.name === "Message") {
             return payload.author.bot;
-        } else if (payload instanceof GuildMember) {
+        } else if (payload.constructor.name === "GuildMember") {
             return payload.user.bot;
         }
     }
@@ -18,9 +18,9 @@ const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (
     if (isBot()) return;
 
     const userId = () => {
-        if (payload instanceof Message) {
+        if (payload.constructor.name === "Message") {
             return payload.author.id;
-        } else if (payload instanceof GuildMember) {
+        } else if (payload.constructor.name === "GuildMember") {
             return payload.user.id;
         }
     }
