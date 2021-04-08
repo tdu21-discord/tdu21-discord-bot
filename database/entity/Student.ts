@@ -20,17 +20,21 @@ export class Student extends BaseEntity {
 
     @Column({
         type: "varchar",
-        unique: true
+        unique: true,
+        nullable: true,
+        default: null
     })
     student_id: string;
 
     @Column({
-        nullable: true
+        nullable: true,
+        default: null
     })
     department: string;
 
     @Column({
-        nullable: true
+        nullable: true,
+        default: null
     })
     odd_even: number;
 
@@ -38,7 +42,8 @@ export class Student extends BaseEntity {
         type: "varchar",
         nullable: true,
         length: 4,
-        unique: true
+        unique: true,
+        default: null
     })
     passcode: string;
 
