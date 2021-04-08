@@ -10,6 +10,16 @@ const Unauthenticated: GuardFunction<"message" | "guildMemberAdd"> = async (
         student: Student
     }
 ) => {
+    const isBot = () => {
+        if (payload instanceof Message) {
+            return payload.author.bot;
+        } else if (payload instanceof GuildMember) {
+            return payload.user.bot;
+        }
+    }
+
+    if (isBot()) return;
+
     const userId = () => {
         if (payload instanceof Message) {
             return payload.author.id;

@@ -7,6 +7,16 @@ const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (
     client: Client,
     next: Next
 ) => {
+    const isBot = () => {
+        if (payload instanceof Message) {
+            return payload.author.bot;
+        } else if (payload instanceof GuildMember) {
+            return payload.user.bot;
+        }
+    }
+
+    if (isBot()) return;
+
     const userId = () => {
         if (payload instanceof Message) {
             return payload.author.id;
