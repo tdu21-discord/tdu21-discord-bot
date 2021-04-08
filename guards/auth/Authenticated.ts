@@ -5,7 +5,10 @@ import { Student, Status } from "../../database/entity/Student";
 const Authenticated: GuardFunction<"message" | "guildMemberAdd"> = async (
     [payload]: ArgsOf<"message" | "guildMemberAdd">,
     client: Client,
-    next: Next
+    next: Next,
+    guardData: {
+        student: Student
+    }
 ) => {
     const userId = () => {
         if (payload instanceof Message) {
@@ -15,11 +18,11 @@ const Authenticated: GuardFunction<"message" | "guildMemberAdd"> = async (
         }
     }
 
-    const student = await Student.findOne({
+    guardData.student = await Student.findOne({
         user_id: userId()
     });
 
-    if (student === undefined || student.status !== Status.COMPLETE) return;
+    if (guardData.student === undefined || guardData.student.status !== Status.COMPLETE) return;
 
     await next();
 }

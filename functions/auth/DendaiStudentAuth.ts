@@ -1,13 +1,18 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, MessageEmbed, User } from "discord.js";
 import messages from "../../config/auth/directMessage";
+import { Student } from "../../database/entity/Student";
+import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
+import Unauthenticated from "../../guards/auth/Unauthenticated";
 import DirectMessageOnly from "../../guards/DirectMessageOnlyGuard";
+import { sendVerifyMail } from "../../utils/sendgrid";
 
 export abstract class DendaiStudentAuth {
-    // サーバー参加
+    // サーバー参加 (ゲスト)
     @On("guildMemberAdd")
-    async onGuildMemberAdd(
+    @Guard(Guest)
+    async newJoinStudent(
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
@@ -22,19 +27,50 @@ export abstract class DendaiStudentAuth {
         // メールアドレス認証に関するDMを送信
     }
 
+    // サーバー参加 (未認証)
+    @On("guildMemberAdd")
+    @Guard(Unauthenticated)
+    async joinUnauthStudent(
+        [member]: ArgsOf<"guildMemberAdd">,
+        client: Client
+    ) {
+
+    }
+
+    // サーバー参加 (認証済み)
+    @On("guildMemberAdd")
+    @Guard(Authenticated)
+    async joinAuthStudent(
+        [member]: ArgsOf<"guildMemberAdd">,
+        client: Client
+    ) {
+
+    }
+
     // 学籍番号の入力
     @On("message")
     @Guard(
         DirectMessageOnly,
-        Guest
+        Unauthenticated
     )
     async receiveStudentId(
         [directMessage]: ArgsOf<"message">,
-        client: Client
+        client: Client,
+        guardData: {
+            student: Student
+        }
     ) {
+        const { student } = guardData;
+        const studentId = directMessage.content;
+
         // メンバーIDがDB上に存在し、ステータスが `NEW_JOIN` の場合のみ以下を処理する
+        if (student.status !== "NEW_JOIN") return;
 
         // 学籍番号を正規表現で検証し、マッチしなければエラーを吐く
+        if (!/21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId)) {
+            await this.sendDirectMessage(directMessage.author, "error_student_id");
+            return;
+        }
 
         // 学籍番号をハッシュ化して、メンバーテーブルに同じ値がないか検証する
 
@@ -53,9 +89,9 @@ export abstract class DendaiStudentAuth {
     @On("message")
     @Guard(
         DirectMessageOnly,
-        Guest
+        Unauthenticated
     )
-    async verifyCode(
+    async verifyStudent(
         [directMessage]: ArgsOf<"message">,
         client: Client
     ) {
@@ -76,15 +112,6 @@ export abstract class DendaiStudentAuth {
         // 認証成功に関するDMを送信
     }
 
-    // サーバー脱退
-    @On("guildMemberRemove")
-    async onGuildMemberRemove(
-        [member]: ArgsOf<"guildMemberRemove">,
-        client: Client
-    ) {
-        // メンバーに関する情報を抹消
-    }
-
     // ダイレクトメッセージを送信する
     async sendDirectMessage(
         user: User,
@@ -100,5 +127,14 @@ export abstract class DendaiStudentAuth {
 
             await user.send(getSendObject(message.body));
         }
+    }
+
+    // ロールを付与する
+    async setRole(
+        user: User,
+        department: string,
+        oddEven: number
+    ) {
+        //
     }
 }
