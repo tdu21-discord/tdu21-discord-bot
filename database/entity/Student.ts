@@ -42,10 +42,9 @@ export class Student extends BaseEntity {
         type: "varchar",
         nullable: true,
         length: 4,
-        unique: true,
         default: null
     })
-    passcode: string;
+    verifycode: string;
 
     @Column({
         default: 0
