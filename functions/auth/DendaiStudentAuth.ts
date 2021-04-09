@@ -1,6 +1,7 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
-import { Client, MessageEmbed, User } from "discord.js";
+import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
 import messages from "../../config/auth/directMessage";
+import departments from "../../config/departments";
 import { Student } from "../../database/entity/Student";
 import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
@@ -12,7 +13,7 @@ import { sendVerifyMail } from "../../utils/sendgrid";
 export abstract class DendaiStudentAuth {
     @On("guildMemberAdd")
     @Guard(Guest)
-    async joinNewStudent(
+    joinNewStudent(
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
@@ -27,28 +28,65 @@ export abstract class DendaiStudentAuth {
 
         this.sendDirectMessage(member.user, "join");
 
-        logger.info("[NEW_JOIN] " + member.user.id + " ");
+        logger.info(`[NEW_JOIN] ${member.user.username}(${member.user.id}) joined the server`);
     }
 
-    // サーバー参加 (未認証)
     @On("guildMemberAdd")
     @Guard(Unauthenticated)
-    async joinUnauthStudent(
+    joinUnauthStudent(
         [member]: ArgsOf<"guildMemberAdd">,
-        client: Client
+        client: Client,
+        guardData: {
+            student: Student
+        }
     ) {
-        // ステータスが `NEW_JOIN` であれば、レコード作成をスキップする
-        // ステータスが `SENT_EMAIL` であれば、確認コードを再発行認証用メールを再送信してレコードの作成と認証に関するDMの送信をスキップ
+        const { student } = guardData;
+
+        if (student.status === "NEW_JOIN") {
+            this.sendDirectMessage(member.user, "join");
+            logger.info(`[RE_JOIN] ${member.user.username}(${member.user.id}) joined the serber`);
+            return;
+        }
+
+        const verifyCode = this.generateVerifyCode();
+
+        try {
+            student.verifycode = verifyCode;
+            student.save();
+
+            sendVerifyMail(student.student_id, verifyCode);
+        } catch (error) {
+            logger.error(error);
+        }
+
+        // 再発行通知
+        this.sendDirectMessage(member.user, "join_unauth");
+
+        logger.info(`[RE_JOIN] Regenerate verifyCode and resend email... ${member.user.username}(${member.user.id})`)
     }
 
-    // サーバー参加 (認証済み)
     @On("guildMemberAdd")
     @Guard(Authenticated)
-    async joinAuthStudent(
+    joinAuthStudent(
         [member]: ArgsOf<"guildMemberAdd">,
-        client: Client
+        client: Client,
+        guardData: {
+            student: Student
+        }
     ) {
-        // ステータスが `COMPLETE` であれば、自動認証しメンバーにロールを付与する
+        const { student } = guardData;
+
+        this.setRole(
+            member.guild,
+            member.user,
+            student.department,
+            student.odd_even
+        );
+
+        // 認証済み通知
+        this.sendDirectMessage(member.user, "join_auth");
+
+        logger.info(`[RE_JOIN] Set Role... ${member.user.username}(${member.user.id})`);
     }
 
     // 学籍番号の入力
@@ -57,7 +95,7 @@ export abstract class DendaiStudentAuth {
         DirectMessageOnly,
         Unauthenticated
     )
-    async receiveStudentId(
+    receiveStudentId(
         [directMessage]: ArgsOf<"message">,
         client: Client,
         guardData: {
@@ -67,12 +105,10 @@ export abstract class DendaiStudentAuth {
         const { student } = guardData;
         const studentId = directMessage.content;
 
-        // メンバーIDがDB上に存在し、ステータスが `NEW_JOIN` の場合のみ以下を処理する
         if (student.status !== "NEW_JOIN") return;
 
-        // 学籍番号を正規表現で検証し、マッチしなければエラーを吐く
         if (!/21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId)) {
-            await this.sendDirectMessage(directMessage.author, "error_student_id");
+            this.sendDirectMessage(directMessage.author, "error_student_id");
             return;
         }
 
@@ -95,7 +131,7 @@ export abstract class DendaiStudentAuth {
         DirectMessageOnly,
         Unauthenticated
     )
-    async verifyStudent(
+    verifyStudent(
         [directMessage]: ArgsOf<"message">,
         client: Client
     ) {
@@ -116,7 +152,6 @@ export abstract class DendaiStudentAuth {
         // 認証成功に関するDMを送信
     }
 
-    // ダイレクトメッセージを送信する
     async sendDirectMessage(
         user: User,
         messageName: string
@@ -133,12 +168,51 @@ export abstract class DendaiStudentAuth {
         }
     }
 
-    // ロールを付与する
     async setRole(
+        guild: Guild,
         user: User,
-        department: string,
+        departmentName: string,
         oddEven: number
     ) {
-        //
+        const beAddedDep = departments.find(
+            (department) => department.slug === departmentName.toUpperCase()
+        );
+
+        if (beAddedDep === undefined) return;
+
+        const member = guild.member(user);
+        const userRoles: Role[] = member.roles.cache.array();
+
+        // メンバーロールの ID
+        if (userRoles.find((role) => role.id === "") !== undefined) return;
+
+        member.roles.add([
+            await guild.roles.fetch(""),
+            await guild.roles.fetch(beAddedDep.departmentRoleId)
+        ]);
+
+        // 偶数 or 奇数ロールの ID
+        if (oddEven === 0) {
+            member.roles.add(
+                await guild.roles.fetch("")
+            );
+        } else {
+            member.roles.add(
+                await guild.roles.fetch("")
+            );
+        }
+    }
+
+    generateVerifyCode() {
+        const numberTable = "0123456789";
+        let verifyCode = "";
+
+        for (let i = 0, k = numberTable.length; i < 4; i++) {
+            verifyCode += numberTable.charAt(
+                Math.floor(k * Math.random())
+            );
+        }
+
+        return verifyCode;
     }
 }
