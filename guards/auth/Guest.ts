@@ -1,5 +1,5 @@
-import { ArgsOf, GuardFunction, Next } from "@typeit/discord";
-import { Client, Guild, GuildMember, Message } from "discord.js";
+import { GuardFunction, Next } from "@typeit/discord";
+import { Client } from "discord.js";
 import { Student } from "../../database/entity/Student";
 
 const Guest: GuardFunction<"message" | "guildMemberAdd"> = async (

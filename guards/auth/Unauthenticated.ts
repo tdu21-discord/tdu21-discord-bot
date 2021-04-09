@@ -1,9 +1,9 @@
-import { ArgsOf, GuardFunction, Next } from "@typeit/discord";
-import { Client, GuildMember, Message } from "discord.js";
+import { GuardFunction, Next } from "@typeit/discord";
+import { Client } from "discord.js";
 import { Student, Status } from "../../database/entity/Student";
 
 const Unauthenticated: GuardFunction<"message" | "guildMemberAdd"> = async (
-    [payload]: any, //  しゃーなし…
+    [payload]: any,
     client: Client,
     next: Next,
     guardData: {

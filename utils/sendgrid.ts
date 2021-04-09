@@ -1,4 +1,5 @@
 import * as sendgrid from "@sendgrid/mail";
+import emails from "../config/auth/email";
 
 import { logger } from "./logger";
 
@@ -10,14 +11,18 @@ export const sendVerifyMail = (
 ) => {
     const studentEmail = studentId.toLowerCase() + "@" + process.env.DENDAI_EMAIL_DOMAIN;
 
+    const messageDatum = emails.find(
+        (email) => email.name === "verify"
+    );
+
     const message = {
         to: studentEmail,
         from: {
             email: process.env.SENDGRID_FROM_EMAIL,
             name: process.env.SENDGRID_FROM_NAME
         },
-        subject: "【認証コード】TDU21 Discordキャンパス 学籍認証に関するお知らせ",
-        text: "認証コード: %verifyCode%",
+        subject: messageDatum.subject,
+        text: messageDatum.body,
         substitutions: {
             verifyCode: verifyCode
         },
