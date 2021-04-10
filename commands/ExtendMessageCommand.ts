@@ -1,19 +1,13 @@
-import { Command, CommandMessage, Discord } from "@typeit/discord";
+import { Command, CommandMessage, Discord, Guard } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
 import posts from "../config/posts";
+import ModelatorOnly from "../guards/ModelatorOnlyGuard";
 
 export abstract class ExtendMessageCommand {
-  @Command("extend :targetChannel :messageKey")
-  async onExtendMessageCommand(message: CommandMessage) {
 
-    if (message.member.roles.cache.find((role) => role.id === process.env.MODERATOR_ROLE_ID) === undefined) {
-      message.channel.send({embed:
-        new MessageEmbed()
-          .setColor("#F24D24")
-          .setTitle("このコマンドを実行する権限がありません。")}
-      );
-      return;
-    }
+  @Command("extend :targetChannel :messageKey")
+  @Guard(ModelatorOnly)
+  async onExtendMessageCommand(message: CommandMessage) {
 
     message.react("👀");
 
