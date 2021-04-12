@@ -9,6 +9,15 @@ const messages = [
         ]
     },
     {
+        name: "rejoin",
+        contents: [
+            {
+                body:
+                    ""
+            }
+        ]
+    },
+    {
         name: "join_unauth",
         contents: [
             {

@@ -2,7 +2,7 @@ import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
 import messages from "../../config/auth/directMessage";
 import departments from "../../config/departments";
-import { Student } from "../../database/entity/Student";
+import { Status, Student } from "../../database/entity/Student";
 import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
 import Unauthenticated from "../../guards/auth/Unauthenticated";
@@ -24,6 +24,7 @@ export abstract class DendaiStudentAuth {
             student.save();
         } catch (error) {
             logger.error(error);
+            return;
         }
 
         this.sendDirectMessage(member.user, "join");
@@ -42,27 +43,23 @@ export abstract class DendaiStudentAuth {
     ) {
         const { student } = guardData;
 
-        if (student.status === "NEW_JOIN") {
+        if (student.status === Status.SENT_EMAIL) return;
+
+        if (student.status === Status.NEW_JOIN) {
             this.sendDirectMessage(member.user, "join");
-            logger.info(`[RE_JOIN] ${member.user.username}(${member.user.id}) joined the serber`);
+            logger.info(`[RE_JOIN] ${member.user.username}(${member.user.id}) joined the server`);
             return;
         }
 
-        const verifyCode = this.generateVerifyCode();
-
         try {
-            student.verifycode = verifyCode;
+            student.status = Status.RE_JOIN;
             student.save();
-
-            sendVerifyMail(student.student_id, verifyCode);
         } catch (error) {
             logger.error(error);
+            return;
         }
 
-        // 再発行通知
-        this.sendDirectMessage(member.user, "join_unauth");
-
-        logger.info(`[RE_JOIN] Regenerate verifyCode and resend email... ${member.user.username}(${member.user.id})`)
+        this.sendDirectMessage(member.user, "rejoin");
     }
 
     @On("guildMemberAdd")
@@ -83,7 +80,6 @@ export abstract class DendaiStudentAuth {
             student.odd_even
         );
 
-        // 認証済み通知
         this.sendDirectMessage(member.user, "join_auth");
 
         logger.info(`[RE_JOIN] Set Role... ${member.user.username}(${member.user.id})`);
@@ -105,24 +101,43 @@ export abstract class DendaiStudentAuth {
         const { student } = guardData;
         const studentId = directMessage.content;
 
-        if (student.status !== "NEW_JOIN") return;
+        if (student.status === Status.SENT_EMAIL) return;
 
         if (!/21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId)) {
             this.sendDirectMessage(directMessage.author, "error_student_id");
             return;
         }
 
-        // 学籍番号をハッシュ化して、メンバーテーブルに同じ値がないか検証する
+        // 学籍番号をハッシュ化する
 
-        // メンバーテーブルに同じ値があればエラーを吐く、同じ値がなければハッシュ化した学籍番号をレコードに格納する
+        switch (student.status) {
+            case Status.NEW_JOIN:
 
-        // 学籍番号を 21 + 〇〇 + XXX で分け、学科記号と学籍番号下1桁が奇数であるか偶数であるかをレコードに格納する
+                // ハッシュ化した学籍番号がメンバーテーブルに同じ値がないか検証する
+
+                // メンバーテーブルに同じ値があればエラーを吐く、同じ値がなければハッシュ化した学籍番号をレコードに格納する
+
+                // 学籍番号を 21 + 〇〇 + XXX で分け、学科記号と学籍番号下1桁が奇数であるか偶数であるかをレコードに格納する
+
+                break;
+
+            case Status.RE_JOIN:
+
+                // ハッシュ化した学籍番号がメンバーテーブルに登録されているものと一致するか検証する
+
+                // 一致しなければエラーを吐く、一致すれば何もしない
+
+                break;
+        }
+
 
         // 6桁のランダムな認証番号を生成し、レコードに格納する
 
         // 学校メールアドレスに認証番号を送信
 
         // ステータスを `SENT_EMAIL` に変更する
+
+        // 認証番号発行に関するDMを送信
     }
 
     // 認証番号の検証
@@ -214,5 +229,9 @@ export abstract class DendaiStudentAuth {
         }
 
         return verifyCode;
+    }
+
+    hashedStudentId() {
+
     }
 }
