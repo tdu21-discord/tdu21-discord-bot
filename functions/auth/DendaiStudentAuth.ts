@@ -1,5 +1,6 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
+import * as bcrypt from "bcrypt";
 import messages from "../../config/auth/directMessage";
 import departments from "../../config/departments";
 import { Status, Student } from "../../database/entity/Student";
@@ -85,7 +86,6 @@ export abstract class DendaiStudentAuth {
         logger.info(`[RE_JOIN] Set Role... ${member.user.username}(${member.user.id})`);
     }
 
-    // 学籍番号の入力
     @On("message")
     @Guard(
         DirectMessageOnly,
@@ -108,39 +108,57 @@ export abstract class DendaiStudentAuth {
             return;
         }
 
-        // 学籍番号をハッシュ化する
+        const hashedStudentId = this.hashedStudentId(studentId);
 
         switch (student.status) {
             case Status.NEW_JOIN:
 
-                // ハッシュ化した学籍番号がメンバーテーブルに同じ値がないか検証する
+                if (Student.findOne({student_id: hashedStudentId}) !== undefined) {
+                    this.sendDirectMessage(directMessage.author, "error_student_id");
+                    return;
+                }
 
-                // メンバーテーブルに同じ値があればエラーを吐く、同じ値がなければハッシュ化した学籍番号をレコードに格納する
+                const departmentId = studentId.substr(2, 3).toUpperCase();
+                const oddEven = parseInt(studentId.substr(6)) % 2;
 
-                // 学籍番号を 21 + 〇〇 + XXX で分け、学科記号と学籍番号下1桁が奇数であるか偶数であるかをレコードに格納する
+                try {
+                    student.student_id = hashedStudentId;
+                    student.department = departmentId;
+                    student.odd_even = oddEven;
+
+                    student.save();
+                } catch (error) {
+                    logger.error(error);
+                    return;
+                }
 
                 break;
 
             case Status.RE_JOIN:
 
-                // ハッシュ化した学籍番号がメンバーテーブルに登録されているものと一致するか検証する
-
-                // 一致しなければエラーを吐く、一致すれば何もしない
+                if (!bcrypt.compareSync(studentId, student.student_id)) {
+                    this.sendDirectMessage(directMessage.author, "error_rejoin_student_id");
+                    return;
+                }
 
                 break;
         }
 
+        try {
+            const verifyCode = this.generateVerifyCode();
 
-        // 6桁のランダムな認証番号を生成し、レコードに格納する
+            sendVerifyMail(studentId, verifyCode);
 
-        // 学校メールアドレスに認証番号を送信
+            student.status = Status.SENT_EMAIL;
+            student.save();
+        } catch (error) {
+            logger.error(error);
+            return;
+        }
 
-        // ステータスを `SENT_EMAIL` に変更する
-
-        // 認証番号発行に関するDMを送信
+        this.sendDirectMessage(directMessage.author, "sent_email");
     }
 
-    // 認証番号の検証
     @On("message")
     @Guard(
         DirectMessageOnly,
@@ -148,23 +166,55 @@ export abstract class DendaiStudentAuth {
     )
     verifyStudent(
         [directMessage]: ArgsOf<"message">,
-        client: Client
+        client: Client,
+        guardData: {
+            student: Student
+        }
     ) {
-        // メンバーIDがDB上に存在し、ステータスが `SENT_EMAIL` の場合のみ以下を処理する
+        const { student } = guardData;
+        const verifyCode = directMessage.content;
 
-        // 認証番号の検証における試行回数が閾値を超えていたら、モデレーターに連絡するようにDMを送信する
+        if (student.status !== Status.SENT_EMAIL) return;
 
-        // 送られてきたメッセージがすべて数字かつ6桁であるかを正規表現で検証する
+        if (student.threshold > parseInt(process.env.STUDENT_ID_VERIFY_MAX)) {
+            this.sendDirectMessage(directMessage.author, "error_threshold");
+            return;
+        }
 
-        // メンバーIDから認証番号を取得し検証を行う
+        if (!/^\d{6}&/.test(verifyCode)) {
+            this.sendDirectMessage(directMessage.author, "error_verify_code_regexp");
+            return;
+        }
 
-        // 認証に成功したら、DB に保存されている学科記号と奇数 or 偶数の情報を用いてロールを付与する
+        if (verifyCode !== student.verifycode) {
+            try {
+                student.threshold++;
+                student.save();
+            } catch (error) {
+                logger.error(error);
+                return;
+            }
 
-        // 認証に失敗したら、試行回数をインクリメントしてエラーを吐く
+            this.sendDirectMessage(directMessage.author, "error_verify_code");
+            return;
+        }
 
-        // ステータスを `COMPLETE` に変更する
+        try {
+            this.setRole(
+                directMessage.guild,
+                directMessage.author,
+                student.department,
+                student.odd_even
+            );
 
-        // 認証成功に関するDMを送信
+            student.status = Status.COMPLETE;
+            student.save();
+        } catch (error) {
+            logger.error(error);
+            return;
+        }
+
+        this.sendDirectMessage(directMessage.author, "complete");
     }
 
     async sendDirectMessage(
@@ -231,7 +281,7 @@ export abstract class DendaiStudentAuth {
         return verifyCode;
     }
 
-    hashedStudentId() {
-
+    hashedStudentId(studentId: string): string {
+        return bcrypt.hashSync(studentId, 10);
     }
 }
