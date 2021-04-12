@@ -2,6 +2,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, U
 
 export enum Status {
     NEW_JOIN = "NEW_JOIN",
+    RE_JOIN = "RE_JOIN",
     SENT_EMAIL = "SENT_EMAIL",
     COMPLETE = "COMPLETE"
 }
