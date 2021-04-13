@@ -70,7 +70,7 @@ const posts: Post[] = [
     contents: [
       {
         body:
-          "https://tdu21-discord.github.io/img/tdu21_discord_general-banner.png",
+          "https://tdu21-discord.org/img/tdu21_discord_general-banner.png",
       },
       {
         body:
@@ -82,11 +82,11 @@ const posts: Post[] = [
       },
       {
         body:
-          "ㅤ\n📄  __**ルール等について**__  📄\n\n当サーバーにおけるルール等、文面で残しておくものは**すべてWebサイト上に掲載しています**。\n\n▼ チェックはこちらから ▼\n<https://tdu21-discord.github.io/about.html>\n\n-----",
+          "ㅤ\n📄  __**ルール等について**__  📄\n\n当サーバーにおけるルール等、文面で残しておくものは**すべてWebサイト上に掲載しています**。\n\n▼ チェックはこちらから ▼\n<https://tdu21-discord.org/about.html>\n\n-----",
       },
       {
         body:
-          "ㅤ\n🔧  __**参加後の設定について**__  🔧\n\n参加後、学科設定をすると話す場所が見えるようになります。\n\n▼ 設定方法 ▼\n<https://tdu21-discord.github.io/guide.html>\n\n-----",
+          "ㅤ\n🔧  __**参加後の設定について**__  🔧\n\n参加後、学科設定をすると話す場所が見えるようになります。\n\n▼ 設定方法 ▼\n<https://tdu21-discord.org/guide.html>\n\n-----",
       },
     ],
   },
