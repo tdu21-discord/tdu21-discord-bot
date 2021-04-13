@@ -149,7 +149,9 @@ export abstract class DendaiStudentAuth {
 
             sendVerifyMail(studentId, verifyCode);
 
+            student.verifycode = verifyCode;
             student.status = Status.SENT_EMAIL;
+
             student.save();
         } catch (error) {
             logger.error(error);
@@ -181,7 +183,7 @@ export abstract class DendaiStudentAuth {
             return;
         }
 
-        if (!/^\d{6}&/.test(verifyCode)) {
+        if (!/^\d{4}&/.test(verifyCode)) {
             this.sendDirectMessage(directMessage.author, "error_verify_code_regexp");
             return;
         }
