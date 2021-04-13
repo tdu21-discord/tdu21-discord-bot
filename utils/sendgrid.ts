@@ -7,7 +7,8 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendVerifyMail = (
     studentId: string,
-    verifyCode: string
+    verifyCode: string,
+    discordUsername: string
 ) => {
     const studentEmail = studentId.toLowerCase() + "@" + process.env.DENDAI_EMAIL_DOMAIN;
 
@@ -24,7 +25,8 @@ export const sendVerifyMail = (
         subject: messageDatum.subject,
         text: messageDatum.body,
         substitutions: {
-            verifyCode: verifyCode
+            verifyCode: verifyCode,
+            discordUsername: discordUsername
         },
         substitutionWrappers: [
             "%", "%"

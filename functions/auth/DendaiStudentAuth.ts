@@ -44,8 +44,6 @@ export abstract class DendaiStudentAuth {
     ) {
         const { student } = guardData;
 
-        if (student.status === Status.SENT_EMAIL) return;
-
         if (student.status === Status.NEW_JOIN) {
             this.sendDirectMessage(member.user, "join");
             logger.info(`[RE_JOIN] ${member.user.username}(${member.user.id}) joined the server`);
@@ -54,6 +52,8 @@ export abstract class DendaiStudentAuth {
 
         try {
             student.status = Status.RE_JOIN;
+            student.verifycode = null;
+
             student.save();
         } catch (error) {
             logger.error(error);
@@ -91,7 +91,7 @@ export abstract class DendaiStudentAuth {
         DirectMessageOnly,
         Unauthenticated
     )
-    receiveStudentId(
+    async receiveStudentId(
         [directMessage]: ArgsOf<"message">,
         client: Client,
         guardData: {
@@ -103,7 +103,7 @@ export abstract class DendaiStudentAuth {
 
         if (student.status === Status.SENT_EMAIL) return;
 
-        if (!/21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId)) {
+        if (!this.validateStudentId(studentId)) {
             this.sendDirectMessage(directMessage.author, "error_student_id");
             return;
         }
@@ -113,12 +113,16 @@ export abstract class DendaiStudentAuth {
         switch (student.status) {
             case Status.NEW_JOIN:
 
-                if (Student.findOne({student_id: hashedStudentId}) !== undefined) {
+                const checkStudentId = await Student.findOne({
+                    student_id: hashedStudentId
+                });
+
+                if (checkStudentId !== undefined) {
                     this.sendDirectMessage(directMessage.author, "error_student_id");
                     return;
                 }
 
-                const departmentId = studentId.substr(2, 3).toUpperCase();
+                const departmentId = studentId.substr(2, 2).toUpperCase();
                 const oddEven = parseInt(studentId.substr(6)) % 2;
 
                 try {
@@ -147,7 +151,7 @@ export abstract class DendaiStudentAuth {
         try {
             const verifyCode = this.generateVerifyCode();
 
-            sendVerifyMail(studentId, verifyCode);
+            sendVerifyMail(studentId, verifyCode, directMessage.author.username);
 
             student.verifycode = verifyCode;
             student.status = Status.SENT_EMAIL;
@@ -178,13 +182,15 @@ export abstract class DendaiStudentAuth {
 
         if (student.status !== Status.SENT_EMAIL) return;
 
+        if (this.validateStudentId(verifyCode)) return;
+
         if (student.threshold > parseInt(process.env.STUDENT_ID_VERIFY_MAX)) {
             this.sendDirectMessage(directMessage.author, "error_threshold");
             return;
         }
 
-        if (!/^\d{4}&/.test(verifyCode)) {
-            this.sendDirectMessage(directMessage.author, "error_verify_code_regexp");
+        if (!/^\d{4}$/.test(verifyCode)) {
+            this.sendDirectMessage(directMessage.author, "error_verify_code");
             return;
         }
 
@@ -202,8 +208,12 @@ export abstract class DendaiStudentAuth {
         }
 
         try {
+            const guild = client.guilds.cache.find(
+                (guild) => guild.id === ""
+            );
+
             this.setRole(
-                directMessage.guild,
+                guild,
                 directMessage.author,
                 student.department,
                 student.odd_even
@@ -248,6 +258,7 @@ export abstract class DendaiStudentAuth {
         if (beAddedDep === undefined) return;
 
         const member = guild.member(user);
+
         const userRoles: Role[] = member.roles.cache.array();
 
         // メンバーロールの ID
@@ -285,5 +296,9 @@ export abstract class DendaiStudentAuth {
 
     hashedStudentId(studentId: string): string {
         return bcrypt.hashSync(studentId, 10);
+    }
+
+    validateStudentId(studentId: string): boolean {
+        return /21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId);
     }
 }
