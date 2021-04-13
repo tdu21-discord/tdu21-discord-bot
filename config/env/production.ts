@@ -178,3 +178,5 @@ export const roles: ServerRoles = {
     roleId: "825015452723052587",
   }
 }
+
+export const serverId: string = "796374774158065674";

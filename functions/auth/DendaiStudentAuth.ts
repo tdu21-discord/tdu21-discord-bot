@@ -209,7 +209,7 @@ export abstract class DendaiStudentAuth {
 
         try {
             const guild = client.guilds.cache.find(
-                (guild) => guild.id === ""
+                (guild) => guild.id === serverConfig.serverId
             );
 
             this.setRole(

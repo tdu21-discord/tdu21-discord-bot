@@ -12,12 +12,14 @@ const getConfig = () => {
   if (process.env.ENV === "production") {
     return {
       departments: prodConfig.departments,
-      roles: prodConfig.roles
+      roles: prodConfig.roles,
+      serverId: prodConfig.serverId
     };
   }
   return {
     departments: devConfig.departments,
-    roles: devConfig.roles
+    roles: devConfig.roles,
+    serverId: devConfig.serverId
   };
 }
 
