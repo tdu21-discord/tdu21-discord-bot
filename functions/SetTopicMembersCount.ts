@@ -1,6 +1,6 @@
 import { ArgsOf, On } from "@typeit/discord";
 import { Client } from "discord.js";
-import departments from "../config/departments";
+import serverConfig from "../config";
 
 export abstract class OptionalChannelRole {
   @On("guildMemberUpdate")
@@ -16,7 +16,7 @@ export abstract class OptionalChannelRole {
       const hasBefore = afterMember.roles.cache.has(role.id);
       const hasAfter = beforeMember.roles.cache.has(role.id);
       if ((hasBefore || hasAfter) && !(hasBefore && hasAfter)) {
-        const deps = departments.filter(
+        const deps = serverConfig.departments.filter(
           (dep) => dep.departmentRoleId === role.id
         );
         if (deps[0]) {
