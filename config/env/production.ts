@@ -1,6 +1,7 @@
-import { Department } from "../@types/department";
+import { Department } from "../../@types/department";
+import { ServerRoles } from "../../@types/serverRole";
 
-const departments: Department[] = [
+export const departments: Department[] = [
   {
     slug: "AJ",
     name: "システムデザイン工学部 情報システム工学科",
@@ -163,4 +164,17 @@ const departments: Department[] = [
   },
 ];
 
-export default departments;
+export const roles: ServerRoles = {
+  member: {
+    name: "メンバー",
+    roleId: "797458909300129792",
+  },
+  evenNumber: {
+    name: "偶数",
+    roleId: "825015663213936651",
+  },
+  oddNumber: {
+    name: "奇数",
+    roleId: "825015452723052587",
+  }
+}

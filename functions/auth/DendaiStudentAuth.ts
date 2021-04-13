@@ -2,7 +2,7 @@ import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
 import * as bcrypt from "bcrypt";
 import messages from "../../config/auth/directMessage";
-import departments from "../../config/departments";
+import serverConfig from "../../config";
 import { Status, Student } from "../../database/entity/Student";
 import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
@@ -251,7 +251,7 @@ export abstract class DendaiStudentAuth {
         departmentName: string,
         oddEven: number
     ) {
-        const beAddedDep = departments.find(
+        const beAddedDep = serverConfig.departments.find(
             (department) => department.slug === departmentName.toUpperCase()
         );
 
@@ -261,22 +261,20 @@ export abstract class DendaiStudentAuth {
 
         const userRoles: Role[] = member.roles.cache.array();
 
-        // メンバーロールの ID
-        if (userRoles.find((role) => role.id === "") !== undefined) return;
+        if (userRoles.find((role) => role.id === serverConfig.roles.member.roleId) !== undefined) return;
 
         member.roles.add([
-            await guild.roles.fetch(""),
+            await guild.roles.fetch(serverConfig.roles.member.roleId),
             await guild.roles.fetch(beAddedDep.departmentRoleId)
         ]);
 
-        // 偶数 or 奇数ロールの ID
         if (oddEven === 0) {
             member.roles.add(
-                await guild.roles.fetch("")
+                await guild.roles.fetch(serverConfig.roles.evenNumber.roleId)
             );
         } else {
             member.roles.add(
-                await guild.roles.fetch("")
+                await guild.roles.fetch(serverConfig.roles.oddNumber.roleId)
             );
         }
     }
