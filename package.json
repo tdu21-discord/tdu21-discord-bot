@@ -18,7 +18,7 @@
     "@logdna/logger": "^2.3.1",
     "@sendgrid/mail": "^7.4.2",
     "@typeit/discord": "^4.0.9",
-    "bcrypt": "^5.0.1",
+    "argon2": "^0.27.2",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "emoji-unicode": "^2.0.1",

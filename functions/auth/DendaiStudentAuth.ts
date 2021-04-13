@@ -1,6 +1,6 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
-import * as bcrypt from "bcrypt";
+import * as argon2 from "argon2";
 import messages from "../../config/auth/directMessage";
 import serverConfig from "../../config";
 import { Status, Student } from "../../database/entity/Student";
@@ -108,7 +108,7 @@ export abstract class DendaiStudentAuth {
             return;
         }
 
-        const hashedStudentId = this.hashedStudentId(studentId);
+        const hashedStudentId = await this.hashedStudentId(studentId);
 
         switch (student.status) {
             case Status.NEW_JOIN:
@@ -140,9 +140,9 @@ export abstract class DendaiStudentAuth {
 
             case Status.RE_JOIN:
 
-                if (!bcrypt.compareSync(studentId, student.student_id)) {
+                if (!await argon2.verify(student.student_id, studentId)) {
                     this.sendDirectMessage(directMessage.author, "error_rejoin_student_id");
-                    return;
+                    return;                    
                 }
 
                 break;
@@ -292,8 +292,11 @@ export abstract class DendaiStudentAuth {
         return verifyCode;
     }
 
-    hashedStudentId(studentId: string): string {
-        return bcrypt.hashSync(studentId, 10);
+    async hashedStudentId(studentId: string) {
+        return await argon2.hash(studentId, {
+            hashLength: 50,
+            timeCost: 4
+        });
     }
 
     validateStudentId(studentId: string): boolean {
