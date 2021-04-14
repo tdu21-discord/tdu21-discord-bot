@@ -18,9 +18,9 @@ export abstract class DendaiStudentAuth {
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
-        try {
-            const student = new Student();
+        const student = new Student();
 
+        try {
             student.user_id = member.user.id;
             student.save();
         } catch (error) {
@@ -30,7 +30,7 @@ export abstract class DendaiStudentAuth {
 
         this.sendDirectMessage(member.user, "join");
 
-        logger.info(`[NEW_JOIN] ${member.user.username}(${member.user.id}) joined the server`);
+        logger.info(`[NEW_JOIN][${student.id}] ${member.user.username}(${member.user.id})`);
     }
 
     @On("guildMemberAdd")
@@ -46,15 +46,16 @@ export abstract class DendaiStudentAuth {
 
         if (student.status === Status.NEW_JOIN) {
             this.sendDirectMessage(member.user, "join");
-            logger.info(`[RE_JOIN] ${member.user.username}(${member.user.id}) joined the server`);
+            logger.info(`[NEW_JOIN][${student.id}] ${member.user.username}(${member.user.id})`);
             return;
         }
 
         try {
             student.status = Status.RE_JOIN;
             student.verifycode = null;
-
             student.save();
+
+            logger.info(`[RE_JOIN][${student.id}] ${member.user.username}(${member.user.id})`);
         } catch (error) {
             logger.error(error);
             return;
@@ -83,7 +84,7 @@ export abstract class DendaiStudentAuth {
 
         this.sendDirectMessage(member.user, "join_auth");
 
-        logger.info(`[RE_JOIN] Set Role... ${member.user.username}(${member.user.id})`);
+        logger.info(`[COMPLETE][${student.id}] ${member.user.username}(${member.user.id})`);
     }
 
     @On("message")
@@ -163,6 +164,8 @@ export abstract class DendaiStudentAuth {
         }
 
         this.sendDirectMessage(directMessage.author, "sent_email");
+
+        logger.info(`[SENT_EMAIL][${student.id}] ${directMessage.author.username}(${directMessage.author.id})`);
     }
 
     @On("message")
@@ -227,6 +230,8 @@ export abstract class DendaiStudentAuth {
         }
 
         this.sendDirectMessage(directMessage.author, "complete");
+
+        logger.info(`[COMPLETE][${student.id}] ${directMessage.author.username}(${directMessage.author.id})`);
     }
 
     async sendDirectMessage(
