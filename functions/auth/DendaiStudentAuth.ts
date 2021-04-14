@@ -14,7 +14,7 @@ import { sendVerifyMail } from "../../utils/sendgrid";
 export abstract class DendaiStudentAuth {
     @On("guildMemberAdd")
     @Guard(Guest)
-    joinNewStudent(
+    async joinNewStudent(
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client
     ) {
@@ -22,7 +22,7 @@ export abstract class DendaiStudentAuth {
 
         try {
             student.user_id = member.user.id;
-            student.save();
+            await student.save();
         } catch (error) {
             logger.error(error);
             return;
@@ -44,11 +44,7 @@ export abstract class DendaiStudentAuth {
     ) {
         const { student } = guardData;
 
-        if (student.status === Status.NEW_JOIN) {
-            this.sendDirectMessage(member.user, "join");
-            logger.info(`[NEW_JOIN][${student.id}] ${member.user.username}(${member.user.id})`);
-            return;
-        }
+        if (student.status === Status.NEW_JOIN) return;
 
         try {
             student.status = Status.RE_JOIN;
@@ -187,7 +183,7 @@ export abstract class DendaiStudentAuth {
 
         if (this.validateStudentId(verifyCode)) return;
 
-        if (student.threshold > parseInt(process.env.STUDENT_ID_VERIFY_MAX)) {
+        if (student.threshold >= parseInt(process.env.STUDENT_ID_VERIFY_MAX)) {
             this.sendDirectMessage(directMessage.author, "error_threshold");
             return;
         }
