@@ -3,11 +3,6 @@ import { ServerRoles } from "../@types/serverRole";
 import * as devConfig from "./env/development"
 import * as prodConfig from "./env/production";
 
-type serverConfig = {
-  departments: Department[]
-  roles: ServerRoles
-}
-
 const getConfig = () => {
   if (process.env.ENV === "production") {
     return {
