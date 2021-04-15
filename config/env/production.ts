@@ -177,6 +177,10 @@ const roles: ServerRoles = {
   oddNumber: {
     name: "奇数",
     roleId: "825015452723052587",
+  },
+  modelator: {
+    name: "モデレーター",
+    roleId: "796375044334419969",
   }
 }
 

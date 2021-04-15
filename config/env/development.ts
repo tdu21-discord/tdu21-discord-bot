@@ -7,7 +7,7 @@ const departments: Department[] = [
     slug: "AJ",
     name: "システムデザイン工学部 情報システム工学科",
     departmentRoleId: "829696390217072648",
-    facultyRoleId: "829696390217072649",
+    facultyRoleId: "829696390217072648",
     emojiId: "796584431078342697",
     channelId: "829696390891962372",
   },
@@ -15,7 +15,7 @@ const departments: Department[] = [
     slug: "AD",
     name: "システムデザイン工学部 デザイン工学科",
     departmentRoleId: "829696390217072647",
-    facultyRoleId: "829696390217072649",
+    facultyRoleId: "829696390217072648",
     emojiId: "796584431229468772",
     channelId: "829696390891962373",
   },
@@ -177,6 +177,10 @@ const roles: ServerRoles = {
   oddNumber: {
     name: "奇数",
     roleId: "829696390170542134",
+  },
+  modelator: {
+    name: "モデレーター",
+    roleId: "829696390233063496",
   }
 }
 

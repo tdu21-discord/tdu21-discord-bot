@@ -23,7 +23,7 @@ export const sendVerifyMail = (
             name: process.env.SENDGRID_FROM_NAME
         },
         subject: messageDatum.subject,
-        text: messageDatum.body,
+        html: messageDatum.body,
         substitutions: {
             verifyCode: verifyCode,
             discordUsername: discordUsername

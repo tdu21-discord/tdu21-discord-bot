@@ -2,6 +2,7 @@ export type ServerRoles = {
   member: ServerRole
   evenNumber: ServerRole
   oddNumber: ServerRole
+  modelator: ServerRole
   others?: ServerRole[]
 }
 
