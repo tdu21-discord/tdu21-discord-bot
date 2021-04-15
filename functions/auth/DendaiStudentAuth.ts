@@ -139,7 +139,7 @@ export abstract class DendaiStudentAuth {
 
                 if (!await argon2.verify(student.student_id, studentId)) {
                     this.sendDirectMessage(directMessage.author, "error_rejoin_student_id");
-                    return;                    
+                    return;
                 }
 
                 break;
@@ -261,18 +261,18 @@ export abstract class DendaiStudentAuth {
 
         if (userRoles.find((role) => role.id === guildConfig.roles.member.roleId) !== undefined) return;
 
-        member.roles.add([
+        await member.roles.add([
             await guild.roles.fetch(guildConfig.roles.member.roleId),
             await guild.roles.fetch(beAddedDep.facultyRoleId),
             await guild.roles.fetch(beAddedDep.departmentRoleId)
         ]);
 
         if (oddEven === 0) {
-            member.roles.add(
+            await member.roles.add(
                 await guild.roles.fetch(guildConfig.roles.evenNumber.roleId)
             );
         } else {
-            member.roles.add(
+            await member.roles.add(
                 await guild.roles.fetch(guildConfig.roles.oddNumber.roleId)
             );
         }
