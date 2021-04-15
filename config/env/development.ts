@@ -1,7 +1,8 @@
 import { Department } from "../../@types/department";
+import { GuildConfig } from "../../@types/guildConfig";
 import { ServerRoles } from "../../@types/serverRole";
 
-export const departments: Department[] = [
+const departments: Department[] = [
   {
     slug: "AJ",
     name: "システムデザイン工学部 情報システム工学科",
@@ -164,7 +165,7 @@ export const departments: Department[] = [
   },
 ];
 
-export const roles: ServerRoles = {
+const roles: ServerRoles = {
   member: {
     name: "メンバー",
     roleId: "829696390233063494",
@@ -179,4 +180,10 @@ export const roles: ServerRoles = {
   }
 }
 
-export const serverId: string = "829696390161629244";
+const guildConfig: GuildConfig = {
+  guildId: "829696390161629244",
+  roles: roles,
+  departments: departments
+}
+
+export default guildConfig

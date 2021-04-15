@@ -3,7 +3,7 @@ import {
   Role,
   TextChannel,
 } from "discord.js";
-import serverConfig from "../config";
+import guildConfig from "../config";
 
 export abstract class DepartmentRole {
   @On("messageReactionAdd")
@@ -28,7 +28,7 @@ export abstract class DepartmentRole {
     if (reaction.message.id !== "797459494061473822") return;
 
     // リアクションに対応する役職があるかどうか
-    const beAddedDep = serverConfig.departments.find(
+    const beAddedDep = guildConfig.departments.find(
       (department) => department.emojiId === reaction.emoji.id
     );
     if (beAddedDep === undefined) return;
@@ -37,7 +37,7 @@ export abstract class DepartmentRole {
     const member = reaction.message.guild.member(user);
     const userRoles: Role[] = member.roles.cache.array();
     if (
-      userRoles.find((role) => role.id === serverConfig.roles.member.roleId) !== undefined
+      userRoles.find((role) => role.id === guildConfig.roles.member.roleId) !== undefined
     ) {
       reaction.users.remove(user);
       return;
@@ -45,7 +45,7 @@ export abstract class DepartmentRole {
 
     // リアクションに対応する役職を付与する
     member.roles.add([
-      await reaction.message.guild.roles.fetch(serverConfig.roles.member.roleId),
+      await reaction.message.guild.roles.fetch(guildConfig.roles.member.roleId),
       await reaction.message.guild.roles.fetch(beAddedDep.departmentRoleId),
     ]);
 

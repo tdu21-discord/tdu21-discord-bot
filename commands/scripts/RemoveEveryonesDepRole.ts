@@ -1,6 +1,6 @@
 import { CommandMessage } from "@typeit/discord";
 import { Guild } from "discord.js";
-import serverConfig from "../../config";
+import guildConfig from "../../config";
 import { logger } from "../../utils/logger";
 
 const RemoveEveryonesDepRole = async (message: CommandMessage) => {
@@ -10,7 +10,7 @@ const RemoveEveryonesDepRole = async (message: CommandMessage) => {
   members.forEach((member, key) => {
     if (!member.user.bot){
       member.roles.cache.forEach((role) => {
-        serverConfig.departments.forEach((dep) => {
+        guildConfig.departments.forEach((dep) => {
           if (dep.departmentRoleId === role.id) {
             logger.debug("Removed: " + member.user.username + " / " + role.name)
             member.roles.remove(role)

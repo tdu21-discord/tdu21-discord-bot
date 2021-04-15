@@ -2,7 +2,7 @@ import { ArgsOf, Guard, On } from "@typeit/discord";
 import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
 import * as argon2 from "argon2";
 import messages from "../../config/auth/directMessage";
-import serverConfig from "../../config";
+import guildConfig from "../../config";
 import { Status, Student } from "../../database/entity/Student";
 import Authenticated from "../../guards/auth/Authenticated";
 import Guest from "../../guards/auth/Guest";
@@ -212,7 +212,7 @@ export abstract class DendaiStudentAuth {
 
         try {
             const guild = client.guilds.cache.find(
-                (guild) => guild.id === serverConfig.serverId
+                (guild) => guild.id === guildConfig.guildId
             );
 
             this.setRole(
@@ -242,11 +242,8 @@ export abstract class DendaiStudentAuth {
             (message) => message.name === messageName
         );
 
-        for (let message of messageDatum.contents) {
-            const getSendObject = (body: string | MessageEmbed) =>
-                body instanceof MessageEmbed ? { embed: body } : body;
-
-            await user.send(getSendObject(message.body));
+        for (let message of messageDatum.body) {
+            await user.send(message);
         }
     }
 
@@ -256,7 +253,7 @@ export abstract class DendaiStudentAuth {
         departmentName: string,
         oddEven: number
     ) {
-        const beAddedDep = serverConfig.departments.find(
+        const beAddedDep = guildConfig.departments.find(
             (department) => department.slug === departmentName.toUpperCase()
         );
 
@@ -266,20 +263,21 @@ export abstract class DendaiStudentAuth {
 
         const userRoles: Role[] = member.roles.cache.array();
 
-        if (userRoles.find((role) => role.id === serverConfig.roles.member.roleId) !== undefined) return;
+        if (userRoles.find((role) => role.id === guildConfig.roles.member.roleId) !== undefined) return;
 
         member.roles.add([
-            await guild.roles.fetch(serverConfig.roles.member.roleId),
+            await guild.roles.fetch(guildConfig.roles.member.roleId),
+            await guild.roles.fetch(beAddedDep.facultyRoleId),
             await guild.roles.fetch(beAddedDep.departmentRoleId)
         ]);
 
         if (oddEven === 0) {
             member.roles.add(
-                await guild.roles.fetch(serverConfig.roles.evenNumber.roleId)
+                await guild.roles.fetch(guildConfig.roles.evenNumber.roleId)
             );
         } else {
             member.roles.add(
-                await guild.roles.fetch(serverConfig.roles.oddNumber.roleId)
+                await guild.roles.fetch(guildConfig.roles.oddNumber.roleId)
             );
         }
     }
