@@ -13,7 +13,7 @@ const AllMemberReset = async (message: CommandMessage) => {
 
   for (let [,member] of members){
     if (member.user.bot) continue;
-    if (!member.roles.cache.has(config.roles.member.roleId)) continue;
+    if (member.roles.cache.has(config.roles.member.roleId)) continue;
 
     logger.log(`[CREATE_SCRIPT] ${member.user.username} / CREATED`)
     const student = new Student();
