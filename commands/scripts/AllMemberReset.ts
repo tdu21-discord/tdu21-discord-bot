@@ -11,12 +11,13 @@ const AllMemberReset = async (message: CommandMessage) => {
   const memberRole = await message.guild.roles.fetch(config.roles.member.roleId);
 
   for (let [,member] of members){
-    if (member.user.bot) return;
-    if (!member.roles.cache.has(config.roles.member.roleId)) return;
+    console.log(member)
+    if (member.user.bot) continue;
+    if (!(member.roles.cache.has(config.roles.member.roleId))) continue;
     logger.log(`[RESET_SCRIPT] ${member.user.username} / START`)
     if (member.roles.cache.has(config.roles.modelator.roleId)){
       logger.log(`[RESET_SCRIPT] ${member.user.username} / END - USER HAS MODERATOR ROLE`)
-      return;
+      continue;
     }
 
     const guildRoles = message.guild.roles;
