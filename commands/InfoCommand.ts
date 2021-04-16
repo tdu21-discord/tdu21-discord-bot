@@ -1,10 +1,14 @@
 import { Command, CommandMessage, Guard } from "@typeit/discord";
 import { MessageEmbed, GuildMember } from "discord.js";
 import ModelatorOnly from "../guards/ModelatorOnlyGuard";
+import ServerMessageOnly from "../guards/ServerMessageOnlyGuard";
 
 export abstract class InfoCommand {
   @Command("info :username")
-  @Guard(ModelatorOnly)
+  @Guard(
+    ServerMessageOnly,
+    ModelatorOnly
+  )
   async onInfoCommand(message: CommandMessage) {
     message.react("👀");
 

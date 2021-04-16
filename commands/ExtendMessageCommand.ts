@@ -1,12 +1,18 @@
-import { Command, CommandMessage, Discord, Guard } from "@typeit/discord";
+
+import { Command, CommandMessage, Guard } from "@typeit/discord";
 import { MessageEmbed, TextChannel } from "discord.js";
 import posts from "../config/posts";
 import ModelatorOnly from "../guards/ModelatorOnlyGuard";
+import ServerMessageOnly from "../guards/ServerMessageOnlyGuard";
 
 export abstract class ExtendMessageCommand {
 
   @Command("extend :targetChannel :messageKey")
-  @Guard(ModelatorOnly)
+  // Guard は同期処理なので、かならず ModelatorOnly よりも先に ServerMessageOnly が処理されるようにする
+  @Guard(
+    ServerMessageOnly,
+    ModelatorOnly
+  )
   async onExtendMessageCommand(message: CommandMessage) {
 
     message.react("👀");

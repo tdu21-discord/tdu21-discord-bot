@@ -2,6 +2,7 @@ import { ArgsOf, On, Client } from "@typeit/discord";
 import optionalChannels from "../config/optionalChannels";
 import * as emojiUnicode from "emoji-unicode";
 import { ReactionEmoji } from "discord.js";
+import { logger } from "../utils/logger";
 
 export abstract class OptionalChannelRole {
   @On("messageReactionAdd")
@@ -13,7 +14,7 @@ export abstract class OptionalChannelRole {
       try {
         await reaction.fetch();
       } catch (err) {
-        console.error("データ取得に失敗しました");
+        logger.error("データ取得に失敗しました");
         return;
       }
     }
@@ -58,7 +59,7 @@ export abstract class OptionalChannelRole {
       try {
         await reaction.fetch();
       } catch (err) {
-        console.error("データ取得に失敗しました");
+        logger.error("データ取得に失敗しました");
         return;
       }
     }

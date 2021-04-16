@@ -1,13 +1,10 @@
 import { On, ArgsOf, Client } from "@typeit/discord";
 import {
-  GuildMember,
-  ReactionUserManager,
   Role,
   TextChannel,
-  User,
 } from "discord.js";
-import { Department } from "../@types/department";
-import departments from "../config/departments";
+import guildConfig from "../config";
+import { logger } from "../utils/logger";
 
 export abstract class DepartmentRole {
   @On("messageReactionAdd")
@@ -19,7 +16,7 @@ export abstract class DepartmentRole {
       try {
         await reaction.fetch();
       } catch (err) {
-        console.error("データ取得に失敗しました");
+        logger.error("データ取得に失敗しました");
         return;
       }
     }
@@ -32,7 +29,7 @@ export abstract class DepartmentRole {
     if (reaction.message.id !== "797459494061473822") return;
 
     // リアクションに対応する役職があるかどうか
-    const beAddedDep = departments.find(
+    const beAddedDep = guildConfig.departments.find(
       (department) => department.emojiId === reaction.emoji.id
     );
     if (beAddedDep === undefined) return;
@@ -41,7 +38,7 @@ export abstract class DepartmentRole {
     const member = reaction.message.guild.member(user);
     const userRoles: Role[] = member.roles.cache.array();
     if (
-      userRoles.find((role) => role.id === "797458909300129792") !== undefined
+      userRoles.find((role) => role.id === guildConfig.roles.member.roleId) !== undefined
     ) {
       reaction.users.remove(user);
       return;
@@ -49,7 +46,7 @@ export abstract class DepartmentRole {
 
     // リアクションに対応する役職を付与する
     member.roles.add([
-      await reaction.message.guild.roles.fetch("797458909300129792"),
+      await reaction.message.guild.roles.fetch(guildConfig.roles.member.roleId),
       await reaction.message.guild.roles.fetch(beAddedDep.departmentRoleId),
     ]);
 
