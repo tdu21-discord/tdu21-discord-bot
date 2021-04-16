@@ -2,6 +2,7 @@ import { Command, CommandMessage, Guard } from "@typeit/discord";
 import config from "../config";
 import ModelatorOnly from "../guards/ModelatorOnlyGuard";
 import ServerMessageOnly from "../guards/ServerMessageOnlyGuard";
+import { logger } from "../utils/logger";
 
 export abstract class CheckConfigCommand {
   @Command("config check")
@@ -13,19 +14,19 @@ export abstract class CheckConfigCommand {
     for (let dep of config.departments) {
       const depRole = await cmd.guild.roles.fetch(dep.departmentRoleId)
       const facRole = await cmd.guild.roles.fetch(dep.facultyRoleId)
-      console.log("---")
-      console.log(`役職名: ${dep.name}`)
+      logger.log("---")
+      logger.log(`役職名: ${dep.name}`)
       if (facRole === null){
-        console.log("学部役職: 学部役職がありません")
+        logger.log("学部役職: 学部役職がありません")
       } else {
-        console.log(`学部役職: ${facRole.name}`)
+        logger.log(`学部役職: ${facRole.name}`)
       }
       if (depRole === null){
-        console.log("学科役職: 学科役職がありません")
+        logger.log("学科役職: 学科役職がありません")
       } else {
-        console.log(`学科役職: ${depRole.name}`)
+        logger.log(`学科役職: ${depRole.name}`)
       }
     }
-    console.log("---")
+    logger.log("---")
   }
 }
