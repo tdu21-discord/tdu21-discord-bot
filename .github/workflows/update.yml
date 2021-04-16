@@ -29,7 +29,7 @@ jobs:
           MODERATOR_ROLE_ID: ${{ secrets.MODERATOR_ROLE_ID }}
           LOGDNA_TOKEN: ${{ secrets.LOGDNA_TOKEN }}
           LOGDNA_APP: ${{ secrets.LOGDNA_APP }}
-          SENDGRID_API_KET: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
           SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
           DENDAI_EMAIL_DOMAIN: ${{ secrets.DENDAI_EMAIL_DOMAIN }}
