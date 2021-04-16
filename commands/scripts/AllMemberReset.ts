@@ -2,6 +2,7 @@ import { CommandMessage } from "@typeit/discord";
 import { Guild, User } from "discord.js";
 import config from "../../config";
 import messages from "../../config/auth/directMessage";
+import { Student } from "../../database/entity/Student";
 import { logger } from "../../utils/logger";
 
 const AllMemberReset = async (message: CommandMessage) => {
@@ -11,10 +12,20 @@ const AllMemberReset = async (message: CommandMessage) => {
   const memberRole = await message.guild.roles.fetch(config.roles.member.roleId);
 
   for (let [,member] of members){
-    console.log(member)
     if (member.user.bot) continue;
-    if (!(member.roles.cache.has(config.roles.member.roleId))) continue;
-    logger.log(`[RESET_SCRIPT] ${member.user.username} / START`)
+    if (!member.roles.cache.has(config.roles.member.roleId)) continue;
+
+    logger.log(`[CREATE_SCRIPT] ${member.user.username} / CREATED`)
+    const student = new Student();
+      try {
+        student.user_id = member.id;
+        await student.save();
+      } catch (error) {
+        logger.error(error);
+        return;
+      }
+
+    /*logger.log(`[RESET_SCRIPT] ${member.user.username} / START`)
     if (member.roles.cache.has(config.roles.modelator.roleId)){
       logger.log(`[RESET_SCRIPT] ${member.user.username} / END - USER HAS MODERATOR ROLE`)
       continue;
@@ -36,7 +47,7 @@ const AllMemberReset = async (message: CommandMessage) => {
     }
 
     await sendDirectMessage(member.user, "join")
-    logger.log(`[RESET_SCRIPT] ${member.user.username} / END - COMPLETED`)
+    logger.log(`[RESET_SCRIPT] ${member.user.username} / END - COMPLETED`)*/
 
   }
 }
