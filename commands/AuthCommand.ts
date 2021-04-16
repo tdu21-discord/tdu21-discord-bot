@@ -143,7 +143,7 @@ export abstract class AuthCommand {
 
     const guildRoles = cmd.guild.roles;
 
-    targetMember.roles.remove([
+    await targetMember.roles.remove([
       await guildRoles.fetch(config.roles.member.roleId),
       await guildRoles.fetch(config.roles.oddNumber.roleId),
       await guildRoles.fetch(config.roles.evenNumber.roleId)
@@ -154,8 +154,8 @@ export abstract class AuthCommand {
     );
 
     for (let dep of oldDepRoles){
-      targetMember.roles.remove(await guildRoles.fetch(dep.departmentRoleId))
-      targetMember.roles.remove(await guildRoles.fetch(dep.facultyRoleId))
+      await targetMember.roles.remove(await guildRoles.fetch(dep.departmentRoleId))
+      await targetMember.roles.remove(await guildRoles.fetch(dep.facultyRoleId))
     }
 
     // メッセージを送信する
