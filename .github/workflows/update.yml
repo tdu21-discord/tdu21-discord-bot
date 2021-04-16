@@ -24,7 +24,7 @@ jobs:
       - name: Run update script
         shell: bash -xe {0}
         env:
-          ENV: "production",
+          ENV: "production"
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           MODERATOR_ROLE_ID: ${{ secrets.MODERATOR_ROLE_ID }}
           LOGDNA_TOKEN: ${{ secrets.LOGDNA_TOKEN }}
