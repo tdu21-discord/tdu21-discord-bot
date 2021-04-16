@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 
 const AllMemberReset = async (message: CommandMessage) => {
   const guild = message.guild;
-  const members = guild.members.cache;
+  const members = await guild.members.fetch();
 
   const memberRole = await message.guild.roles.fetch(config.roles.member.roleId);
 
