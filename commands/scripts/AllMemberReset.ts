@@ -7,7 +7,10 @@ import { logger } from "../../utils/logger";
 const AllMemberReset = async (message: CommandMessage) => {
   const guild = message.guild;
   const members = guild.members.cache;
-  members.forEach(async (member, key) => {
+
+  const memberRole = await message.guild.roles.fetch(config.roles.member.roleId);
+
+  for (let [,member] of members){
     if (member.user.bot) return;
     if (!member.roles.cache.has(config.roles.member.roleId)) return;
     logger.log(`[RESET_SCRIPT] ${member.user.username} / START`)
@@ -18,12 +21,7 @@ const AllMemberReset = async (message: CommandMessage) => {
 
     const guildRoles = message.guild.roles;
 
-    await member.roles.remove([
-      await guildRoles.fetch(config.roles.member.roleId),
-      await guildRoles.fetch(config.roles.oddNumber.roleId),
-      await guildRoles.fetch(config.roles.evenNumber.roleId)
-    ])
-
+    await member.roles.remove(memberRole)
     logger.log(`[RESET_SCRIPT] ${member.user.username} / PROGRESS - REMOVED GENERAL ROLES`)
 
     const oldDepRoles = config.departments.filter(
@@ -39,7 +37,7 @@ const AllMemberReset = async (message: CommandMessage) => {
     await sendDirectMessage(member.user, "join")
     logger.log(`[RESET_SCRIPT] ${member.user.username} / END - COMPLETED`)
 
-  })
+  }
 }
 
 const sendDirectMessage = async (
