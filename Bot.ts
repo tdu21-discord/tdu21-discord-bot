@@ -13,12 +13,13 @@ import * as Path from "path";
   import: [
     Path.join(__dirname, "commands", "*.ts"),
     Path.join(__dirname, "functions", "*.ts"),
+    Path.join(__dirname, "functions/auth", "*.ts")
   ],
 })
 export class Bot {
   @Once("ready")
   onReady(event: ArgsOf<"ready">, client: Client): void {
-    console.log("Ready!");
+    console.info("Welcome to TDU21-Discord Bot...");
     client.user.setPresence({
       activity: {
         name: "キャンパス建築中...",
@@ -28,10 +29,11 @@ export class Bot {
 
   @CommandNotFound()
   onCommandNotFound(message: CommandMessage): void {
-    const embed = new MessageEmbed()
-      .setColor("#F24D24")
-      .setTitle("コマンドが見つかりませんでした")
-      .setDescription("入力内容を確認してください");
-    message.channel.send(embed);
+    message.channel.send({embed:
+        new MessageEmbed()
+          .setColor("#F24024")
+          .setTitle("コマンドが見つかりませんでした")
+          .setDescription("入力内容を確認してください")}
+    );
   }
 }

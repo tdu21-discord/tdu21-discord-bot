@@ -1,4 +1,6 @@
-import { Department } from "../@types/department";
+import { Department } from "../../@types/department";
+import { GuildConfig } from "../../@types/guildConfig";
+import { ServerRoles } from "../../@types/serverRole";
 
 const departments: Department[] = [
   {
@@ -163,4 +165,29 @@ const departments: Department[] = [
   },
 ];
 
-export default departments;
+const roles: ServerRoles = {
+  member: {
+    name: "メンバー",
+    roleId: "797458909300129792",
+  },
+  evenNumber: {
+    name: "偶数",
+    roleId: "825015663213936651",
+  },
+  oddNumber: {
+    name: "奇数",
+    roleId: "825015452723052587",
+  },
+  modelator: {
+    name: "モデレーター",
+    roleId: "796375044334419969",
+  }
+}
+
+const guildConfig: GuildConfig = {
+  guildId: "796374774158065674",
+  roles: roles,
+  departments: departments
+}
+
+export default guildConfig

@@ -8,14 +8,24 @@
   "private": false,
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "ts-node": "ts-node",
+    "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate",
+    "migration:run": "ts-node node_modules/.bin/typeorm migration:run",
+    "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert"
   },
   "dependencies": {
+    "@logdna/logger": "^2.3.1",
+    "@sendgrid/mail": "^7.4.2",
     "@typeit/discord": "^4.0.9",
+    "argon2": "^0.27.2",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "emoji-unicode": "^2.0.1",
-    "nodemon": "^2.0.7"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.32"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",

@@ -1,6 +1,11 @@
 import * as dotenv from "dotenv";
 dotenv.config();
+
+import "reflect-metadata";
+
 import { Client } from "@typeit/discord";
+import { logger } from "./utils/logger";
+import { createConnection, getConnection } from "typeorm";
 
 async function start() {
   const client = new Client({
@@ -10,10 +15,25 @@ async function start() {
     partials: ["MESSAGE", "CHANNEL", "REACTION"],
   });
 
+  console.info("Try login discord...");
   await client.login(process.env.DISCORD_BOT_TOKEN);
 
-  process.on("SIGTERM", () => {
-    console.log("session destroy...");
+  try {
+    console.info("Try connectoin database...");
+    await createConnection();
+  } catch (error) {
+    console.error("Database connectoin error...");
+    process.exit();
+  }
+
+  logger.info("Welcome to TDU21-Discord Bot...");
+
+  process.on("SIGINT", async () => {
+    logger.info("Shutdown TDU21-Discord Bot...");
+
+    await getConnection().close();
+    logger.info("Close database connectoin...");
+
     client.destroy();
   });
 }
