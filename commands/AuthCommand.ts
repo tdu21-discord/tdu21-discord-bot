@@ -16,7 +16,7 @@ export abstract class AuthCommand {
     ModelatorOnly
   )
   async onAuthStatusCommand(cmd: CommandMessage){
-    if (!cmd.args.targetUser === undefined){
+    if (!cmd.args.targetMember === undefined){
       await cmd.channel.send({
         embed: new MessageEmbed()
           .setTitle("エラー")
@@ -30,7 +30,7 @@ export abstract class AuthCommand {
       content: "ユーザーを検索中..."
     })
 
-    const targetMemberId = this.getUserIdFromMention(cmd.args.targetUser)
+    const targetMemberId = this.getUserIdFromMention(cmd.args.targetMember)
     const targetMember = cmd.guild.members.cache.get(targetMemberId);
 
     // サーバーにいないユーザーはスキップ
@@ -153,10 +153,10 @@ export abstract class AuthCommand {
       (dep) => targetMember.roles.cache.has(dep.departmentRoleId)
     );
 
-    oldDepRoles.forEach(async (dep) => {
+    for (let dep of oldDepRoles){
       targetMember.roles.remove(await guildRoles.fetch(dep.departmentRoleId))
       targetMember.roles.remove(await guildRoles.fetch(dep.facultyRoleId))
-    })
+    }
 
     // メッセージを送信する
     this.sendDirectMessage(targetMember.user, "join")
@@ -172,14 +172,14 @@ export abstract class AuthCommand {
     })
   }
 
-  @Command("auth limit :targetUser :value")
+  @Command("auth limit :targetMember :value")
   @Guard(
     ServerMessageOnly,
     ModelatorOnly
   )
   async onAuthChangeLimitCommand(cmd: CommandMessage){
 
-    if (cmd.args.targetUser === undefined){
+    if (cmd.args.targetMember === undefined){
       await cmd.channel.send({
         embed: new MessageEmbed()
           .setTitle("エラー")
@@ -215,7 +215,7 @@ export abstract class AuthCommand {
       content: "ユーザーを検索中..."
     })
 
-    const targetMemberId = this.getUserIdFromMention(cmd.args.targetUser)
+    const targetMemberId = this.getUserIdFromMention(cmd.args.targetMember)
     const targetMember = cmd.guild.members.cache.get(targetMemberId);
 
     // サーバーにいないユーザーはスキップ
@@ -259,7 +259,7 @@ export abstract class AuthCommand {
     })
   }
 
-  @Command("auth change :targetUser :status")
+  @Command("auth change :targetMember :status")
   @Guard(
     ServerMessageOnly,
     ModelatorOnly
