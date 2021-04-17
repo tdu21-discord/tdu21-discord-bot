@@ -14,7 +14,7 @@ git fetch origin
 git reset --hard origin/"$BRANCH"
 
 echo "テスト"
-echo "$LOGDNA_APP"
+echo "${LOGDNA_APP}"
 
 yarn install
 
