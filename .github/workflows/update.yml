@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          ref: develop
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -24,7 +22,20 @@ jobs:
       - name: Run update script
         shell: bash -xe {0}
         env:
+          ENV: "production"
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          MODERATOR_ROLE_ID: ${{ secrets.MODERATOR_ROLE_ID }}
+          LOGDNA_TOKEN: ${{ secrets.LOGDNA_TOKEN }}
+          LOGDNA_APP: ${{ secrets.LOGDNA_APP }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
+          DENDAI_EMAIL_DOMAIN: ${{ secrets.DENDAI_EMAIL_DOMAIN }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          STUDENT_ID_VERIFY_MAX: ${{ secrets.STUDENT_ID_VERIFY_MAX }}
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script/update.sh"
-          ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD}
+          ${GITHUB_WORKSPACE}/.github/script/update.sh
