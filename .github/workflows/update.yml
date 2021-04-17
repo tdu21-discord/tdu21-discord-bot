@@ -25,7 +25,7 @@ jobs:
         shell: bash -xe {0}
         env:
           PASSWORD: ${{ secrets.PASSWORD_MOUNTAIN_SERVER }}
-          ENV: ${{ secrets.ENV }}
+          LOGDNA_APP: ${{ secrets.LOGDNA_APP }}
         run: |
           chmod +x "${GITHUB_WORKSPACE}/.github/script/update.sh"
           ${GITHUB_WORKSPACE}/.github/script/update.sh ${PASSWORD}

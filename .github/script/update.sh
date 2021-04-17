@@ -3,6 +3,8 @@ set -e
 
 BRANCH=main
 
+echo $LOGDNA_APP
+
 ssh mountain-server <<SHELL
 
 echo "$1" | sudo -S systemctl stop tdu21-discord-bot
@@ -13,7 +15,7 @@ git checkout "$BRANCH"
 git fetch origin
 git reset --hard origin/"$BRANCH"
 
-echo $ENV
+echo $LOGDNA_APP
 
 yarn install
 
