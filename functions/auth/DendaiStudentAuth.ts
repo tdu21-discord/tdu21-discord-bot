@@ -1,5 +1,5 @@
 import { ArgsOf, Guard, On } from "@typeit/discord";
-import { Client, Guild, MessageEmbed, Role, User } from "discord.js";
+import { Client, Guild, MessageEmbed, Role, TextChannel, User } from "discord.js";
 import * as argon2 from "argon2";
 import messages from "../../config/auth/directMessage";
 import guildConfig from "../../config";
@@ -206,10 +206,11 @@ export abstract class DendaiStudentAuth {
             return;
         }
 
+        const guild = client.guilds.cache.find(
+            (guild) => guild.id === guildConfig.guildId
+        );
+
         try {
-            const guild = client.guilds.cache.find(
-                (guild) => guild.id === guildConfig.guildId
-            );
 
             this.setRole(
                 guild,
@@ -220,9 +221,34 @@ export abstract class DendaiStudentAuth {
 
             student.status = Status.COMPLETE;
             student.save();
+
         } catch (error) {
             logger.error(error);
             return;
+        }
+
+        if (student.createdAt.getTime() > new Date("2021-04-17T10:00:00+0900").getTime() ) {
+
+            const beAddedDep = guildConfig.departments.find(
+                (department) => department.slug === student.department.toUpperCase()
+            );
+
+            if (beAddedDep !== undefined){
+
+                // 自己紹介チャンネルにメンション
+                const introChannel = guild.channels.cache.get(
+                    "796384238885666816"
+                ) as TextChannel;
+                introChannel?.send(
+                    `<:${beAddedDep.slug}:${beAddedDep.emojiId}> ${beAddedDep.name} の <@${directMessage.author.id}> さんが参加しました 🎉`
+                );
+
+                // 学科チャンネルにメンション
+                const depChannel = guild.channels.cache.get(
+                    beAddedDep.channelId
+                ) as TextChannel;
+                depChannel?.send(`<@${directMessage.author.id}> さんが参加しました 🎉`);
+            }
         }
 
         this.sendDirectMessage(directMessage.author, "complete");

@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          ref: develop
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:

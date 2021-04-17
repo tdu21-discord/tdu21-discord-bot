@@ -31,7 +31,7 @@ export abstract class AuthCommand {
     })
 
     const targetMemberId = this.getUserIdFromMention(cmd.args.targetMember)
-    const targetMember = cmd.guild.members.cache.get(targetMemberId);
+    const targetMember = (await cmd.guild.members.fetch()).get(targetMemberId);
 
     // サーバーにいないユーザーはスキップ
     if (targetMember === undefined) {
@@ -97,7 +97,7 @@ export abstract class AuthCommand {
     })
 
     const targetMemberId = this.getUserIdFromMention(cmd.args.targetMember)
-    const targetMember = cmd.guild.members.cache.get(targetMemberId);
+    const targetMember = (await cmd.guild.members.fetch()).get(targetMemberId);
 
     // サーバーにいないユーザーはスキップ
     if (targetMember === undefined) {
@@ -216,7 +216,7 @@ export abstract class AuthCommand {
     })
 
     const targetMemberId = this.getUserIdFromMention(cmd.args.targetMember)
-    const targetMember = cmd.guild.members.cache.get(targetMemberId);
+    const targetMember = (await cmd.guild.members.fetch()).get(targetMemberId);
 
     // サーバーにいないユーザーはスキップ
     if (targetMember === undefined) {
