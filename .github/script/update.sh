@@ -13,9 +13,6 @@ git checkout "$BRANCH"
 git fetch origin
 git reset --hard origin/"$BRANCH"
 
-echo "テスト"
-echo "${LOGDNA_APP}"
-
 yarn install
 
 echo "$1" | sudo -S systemctl start tdu21-discord-bot
