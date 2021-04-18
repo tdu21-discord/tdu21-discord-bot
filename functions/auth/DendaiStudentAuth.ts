@@ -325,6 +325,6 @@ export abstract class DendaiStudentAuth {
     }
 
     validateStudentId(studentId: string): boolean {
-        return /21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId);
+        return /^21(AJ|AD|FA|FI|FR|EJ|EH|ES|EK|EF|EC|NE|NM|NC|RU|RB|RD|RM|RE|RG)[0-9]{3}$/i.test(studentId);
     }
 }
