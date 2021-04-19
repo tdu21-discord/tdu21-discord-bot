@@ -2,7 +2,7 @@
 
 ## Environments
 
-`.env` に `DISCORD_BOT_TOKEN` を記入してください
+`.env.example` をコピーの上各項目を設定してください。
 
 ## Commands
 
