@@ -1,5 +1,5 @@
 import { Department } from "../../@types/department";
-import { GuildConfig } from "../../@types/guildConfig";
+import { ChannelReactionRole, GuildConfig, MessageReactionRole } from "../../@types/guildConfig";
 import { ServerRoles } from "../../@types/serverRole";
 
 const departments: Department[] = [
@@ -184,10 +184,81 @@ const roles: ServerRoles = {
   }
 }
 
+const messageReactionRoles: MessageReactionRole[] = [
+]
+
+const channelReactionRoles: ChannelReactionRole[] = [
+  {
+    roleId: "797639166808293447",
+    roleName: "趣味: 音楽",
+    emojiId: "1F3B5",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797639466864476192",
+    roleName: "趣味: プログラミング",
+    emojiId: "2328 FE0F",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797639470983151646",
+    roleName: "趣味: イラスト",
+    emojiId: "1F58C FE0F",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797639473344282634",
+    roleName: "趣味: VR",
+    emojiId: "1F97D",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797639474980192257",
+    roleName: "趣味: パソコン",
+    emojiId: "1F5A5 FE0F",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797639477287714866",
+    roleName: "趣味: サイクリング",
+    emojiId: "1F6B2",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "797645140151894086",
+    roleName: "趣味: アウトドア",
+    emojiId: "1F5FB",
+    channelId: "797476460709412895",
+    channelName: "3号館エントランス"
+  },
+  {
+    roleId: "798162057589555230",
+    roleName: "裏CP: えっっ",
+    emojiId: "",
+    channelId: "797476492485459989",
+    channelName: "9号館エントランス"
+  },
+  {
+    roleId: "798161861199265842",
+    roleName: "798161861199265842",
+    emojiId: "裏CP: JK科",
+    channelId: "797476492485459989",
+    channelName: "9号館エントランス"
+  }
+]
+
 const guildConfig: GuildConfig = {
   guildId: "796374774158065674",
   roles: roles,
-  departments: departments
+  departments: departments,
+  messageReactionRoles: messageReactionRoles,
+  channelReactionRoles: channelReactionRoles
 }
 
 export default guildConfig

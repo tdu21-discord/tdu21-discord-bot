@@ -1,5 +1,5 @@
 import { Department } from "../../@types/department";
-import { GuildConfig } from "../../@types/guildConfig";
+import { ChannelReactionRole, GuildConfig, MessageReactionRole, ReactionRole } from "../../@types/guildConfig";
 import { ServerRoles } from "../../@types/serverRole";
 
 const departments: Department[] = [
@@ -184,10 +184,18 @@ const roles: ServerRoles = {
   }
 }
 
+const messageReactionRoles: MessageReactionRole[] = [
+]
+
+const channelReactionRoles: ChannelReactionRole[] = [
+]
+
 const guildConfig: GuildConfig = {
   guildId: "829696390161629244",
   roles: roles,
-  departments: departments
+  departments: departments,
+  messageReactionRoles: messageReactionRoles,
+  channelReactionRoles: channelReactionRoles
 }
 
 export default guildConfig
