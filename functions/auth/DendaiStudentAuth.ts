@@ -35,7 +35,7 @@ export abstract class DendaiStudentAuth {
 
     @On("guildMemberAdd")
     @Guard(Unauthenticated)
-    joinUnauthStudent(
+    async joinUnauthStudent(
         [member]: ArgsOf<"guildMemberAdd">,
         client: Client,
         guardData: {
@@ -49,7 +49,8 @@ export abstract class DendaiStudentAuth {
         try {
             student.status = Status.RE_JOIN;
             student.verifycode = null;
-            student.save();
+
+            await student.save();
 
             logger.info(`[RE_JOIN][${student.id}] ${member.user.username}(${member.user.id})`);
         } catch (error) {
@@ -127,7 +128,7 @@ export abstract class DendaiStudentAuth {
                     student.department = departmentId;
                     student.odd_even = oddEven;
 
-                    student.save();
+                    await student.save();
                 } catch (error) {
                     logger.error(error);
                     return;
@@ -153,7 +154,7 @@ export abstract class DendaiStudentAuth {
             student.verifycode = verifyCode;
             student.status = Status.SENT_EMAIL;
 
-            student.save();
+            await student.save();
         } catch (error) {
             logger.error(error);
             return;
@@ -169,7 +170,7 @@ export abstract class DendaiStudentAuth {
         DirectMessageOnly,
         Unauthenticated
     )
-    verifyStudent(
+    async verifyStudent(
         [directMessage]: ArgsOf<"message">,
         client: Client,
         guardData: {
@@ -196,7 +197,7 @@ export abstract class DendaiStudentAuth {
         if (verifyCode !== student.verifycode) {
             try {
                 student.threshold++;
-                student.save();
+                await student.save();
             } catch (error) {
                 logger.error(error);
                 return;
@@ -220,20 +221,20 @@ export abstract class DendaiStudentAuth {
             );
 
             student.status = Status.COMPLETE;
-            student.save();
 
+            await student.save();
         } catch (error) {
             logger.error(error);
             return;
         }
 
-        if (student.createdAt.getTime() > new Date("2021-04-17T10:00:00+0900").getTime() ) {
+        if (student.createdAt.getTime() > new Date("2021-04-17T10:00:00+0900").getTime()) {
 
             const beAddedDep = guildConfig.departments.find(
                 (department) => department.slug === student.department.toUpperCase()
             );
 
-            if (beAddedDep !== undefined){
+            if (beAddedDep !== undefined) {
 
                 // 自己紹介チャンネルにメンション
                 const introChannel = guild.channels.cache.get(
